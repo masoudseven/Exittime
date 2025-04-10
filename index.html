@@ -15,13 +15,14 @@
       margin: 0;
     }
     .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 380px;
-    }
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 380px;
+  min-height: 480px;
+}
     input {
   padding: 0.5rem;
   font-size: 1.2rem;
@@ -45,10 +46,18 @@ button:hover {
   background-color: #45a049;
 }
     #result {
-      margin-top: 1rem;
-      font-size: 1.5rem;
-      color: green;
-    }
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  background-color: #f1f1f1;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#result.show {
+  opacity: 1;
+}
   </style>
 </head>
 <body>
