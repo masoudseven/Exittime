@@ -15,93 +15,104 @@
       margin: 0;
     }
     .container {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  width: 380px;
-  min-height: 480px;
-}
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      width: 380px;
+      min-height: 480px;
+    }
     input {
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  width: 80px;
-  margin: 5px;
-  border-radius: 30px; /* بیضی‌شکل */
-  border: 1px solid #ccc;
-  text-align: center;
-}
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      width: 80px;
+      margin: 5px;
+      border-radius: 30px; /* بیضی‌شکل */
+      border: 1px solid #ccc;
+      text-align: center;
+    }
     button {
-  margin-top: 1rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 1.2rem;
-  border-radius: 30px; /* بیضی‌شکل بشه */
-  border: none;
-  background-color: #4CAF50;
-  color: white;
-  transition: 0.3s;
-}
-button:hover {
-  background-color: #45a049;
-}
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 1.2rem;
+      border-radius: 30px; /* بیضی‌شکل بشه */
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
     #result {
-  margin-top: 1.5rem;
-  font-size: 1.4rem;
-  background-color: #f1f1f1;
-  color: #1B75BC; /* آبی من‌سیتی پررنگ */
-  padding: 0.8rem 1.5rem;
-  border-radius: 30px;
-  display: block; /* بیاد زیر دکمه */
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  font-weight: bold;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-#result.show {
-  opacity: 1;
-}
+      margin-top: 1.5rem;
+      font-size: 1.4rem;
+      background-color: #f1f1f1;
+      color: #1B75BC; /* آبی من‌سیتی پررنگ */
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      display: block; /* بیاد زیر دکمه */
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      font-weight: bold;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #result.show {
+      opacity: 1;
+    }
+    .powered-by {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.9rem;
+      color: #555;
+      font-weight: bold;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>محاسبه‌گر تایم خروج از شرکت</h2>
     <div style="margin-bottom: 20px;">
-  <label style="display: block; font-size: 1.1rem; margin-bottom: 8px;">
-    😂تایم ورودتو وارد کن خوشگلم😂
-  </label>
-  <input type="number" id="hourInput" placeholder="ساعت">
-  <input type="number" id="minuteInput" placeholder="دقیقه">
-</div>
-     <button onclick="calculateTime()">محاسبه</button>
+      <label style="display: block; font-size: 1.1rem; margin-bottom: 8px;">
+        😂تایم ورودتو وارد کن خوشگلم😂
+      </label>
+      <input type="number" id="hourInput" placeholder="ساعت">
+      <input type="number" id="minuteInput" placeholder="دقیقه">
+    </div>
+    <button onclick="calculateTime()">محاسبه</button>
     <div id="result"></div>
   </div>
 
+  <div class="powered-by">Powered by Mason</div>
+
   <script>
     function calculateTime() {
-  let hour = parseInt(document.getElementById('hourInput').value);
-  let minute = parseInt(document.getElementById('minuteInput').value);
+      let hour = parseInt(document.getElementById('hourInput').value);
+      let minute = parseInt(document.getElementById('minuteInput').value);
 
-  if (isNaN(hour)) hour = 0;
-  if (isNaN(minute)) minute = 0;
+      if (isNaN(hour)) hour = 0;
+      if (isNaN(minute)) minute = 0;
 
-  let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
-  let finalHour = Math.floor(totalMinutes / 60) % 24;
-  let finalMinute = totalMinutes % 60;
+      let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
+      let finalHour = Math.floor(totalMinutes / 60) % 24;
+      let finalMinute = totalMinutes % 60;
 
-  const pad = (n) => n.toString().padStart(2, '0');
+      const pad = (n) => n.toString().padStart(2, '0');
 
-  let resultBox = document.getElementById('result');
-  resultBox.classList.remove('show'); // مخفی‌اش کن
-  resultBox.innerText = `ساعت خروج: ${pad(finalHour)}:${pad(finalMinute)}`;
+      let resultBox = document.getElementById('result');
+      resultBox.classList.remove('show'); // مخفی‌اش کن
+      resultBox.innerText = `ساعت خروج: ${pad(finalHour)}:${pad(finalMinute)}`;
 
-  // با یه تاخیر کوچیک، دوباره نشونش بده
-  setTimeout(() => {
-    resultBox.classList.add('show');
-  }, 10);
-}
+      // با یه تاخیر کوچیک، دوباره نشونش بده
+      setTimeout(() => {
+        resultBox.classList.add('show');
+      }, 10);
+    }
   </script>
 </body>
 </html>
