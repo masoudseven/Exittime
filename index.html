@@ -61,7 +61,26 @@ button:hover {
   <input type="number" id="hourInput" placeholder="ساعت">
   <input type="number" id="minuteInput" placeholder="دقیقه">
 </div>
-    <button onclick="calculateTime()">محاسبه</button>
+    button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
     <div id="result"></div>
   </div>
 
