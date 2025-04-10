@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>محاسبه‌گر زمان</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #eef2f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      width: 80px;
+      margin: 5px;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>افزودن ۸ ساعت و ۴۵ دقیقه</h2>
+    <div>
+      <input type="number" id="hourInput" placeholder="ساعت">
+      <input type="number" id="minuteInput" placeholder="دقیقه">
+    </div>
+    <button onclick="calculateTime()">محاسبه</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculateTime() {
+      let hour = parseInt(document.getElementById('hourInput').value);
+      let minute = parseInt(document.getElementById('minuteInput').value);
+
+      if (isNaN(hour)) hour = 0;
+      if (isNaN(minute)) minute = 0;
+
+      // اضافه کردن 8 ساعت و 45 دقیقه
+      let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
+
+      // تبدیل مجدد به ساعت و دقیقه
+      let finalHour = Math.floor(totalMinutes / 60) % 24;
+      let finalMinute = totalMinutes % 60;
+
+      // نمایش با دو رقم (مثلاً 16:00)
+      const pad = (n) => n.toString().padStart(2, '0');
+      document.getElementById('result').innerText = `ساعت نهایی: ${pad(finalHour)}:${pad(finalMinute)}`;
+    }
+  </script>
+</body>
+</html>
