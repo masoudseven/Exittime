@@ -49,6 +49,7 @@ button:hover {
   margin-top: 1.5rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
+  color: #6CABDD; /* آبی من‌سیتی */
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
   display: inline-block;
@@ -90,7 +91,7 @@ button:hover {
 
   let resultBox = document.getElementById('result');
   resultBox.classList.remove('show'); // مخفی‌اش کن
-  resultBox.innerText = `ساعت نهایی: ${pad(finalHour)}:${pad(finalMinute)}`;
+  resultBox.innerText = `ساعت خروج: ${pad(finalHour)}:${pad(finalMinute)}`;
 
   // با یه تاخیر کوچیک، دوباره نشونش بده
   setTimeout(() => {
