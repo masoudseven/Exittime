@@ -67,23 +67,27 @@ button:hover {
 
   <script>
     function calculateTime() {
-      let hour = parseInt(document.getElementById('hourInput').value);
-      let minute = parseInt(document.getElementById('minuteInput').value);
+  let hour = parseInt(document.getElementById('hourInput').value);
+  let minute = parseInt(document.getElementById('minuteInput').value);
 
-      if (isNaN(hour)) hour = 0;
-      if (isNaN(minute)) minute = 0;
+  if (isNaN(hour)) hour = 0;
+  if (isNaN(minute)) minute = 0;
 
-      // اضافه کردن 8 ساعت و 45 دقیقه
-      let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
+  let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
+  let finalHour = Math.floor(totalMinutes / 60) % 24;
+  let finalMinute = totalMinutes % 60;
 
-      // تبدیل مجدد به ساعت و دقیقه
-      let finalHour = Math.floor(totalMinutes / 60) % 24;
-      let finalMinute = totalMinutes % 60;
+  const pad = (n) => n.toString().padStart(2, '0');
 
-      // نمایش با دو رقم (مثلاً 16:00)
-      const pad = (n) => n.toString().padStart(2, '0');
-      document.getElementById('result').innerText = `ساعت نهایی: ${pad(finalHour)}:${pad(finalMinute)}`;
-    }
+  let resultBox = document.getElementById('result');
+  resultBox.classList.remove('show'); // مخفی‌اش کن
+  resultBox.innerText = `ساعت نهایی: ${pad(finalHour)}:${pad(finalMinute)}`;
+
+  // با یه تاخیر کوچیک، دوباره نشونش بده
+  setTimeout(() => {
+    resultBox.classList.add('show');
+  }, 10);
+}
   </script>
 </body>
 </html>
