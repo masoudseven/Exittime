@@ -1,0 +1,83 @@
+@font-face {
+  font-family: 'Estedad';
+  src: url('Estedad-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Estedad', sans-serif;
+  background: #eef2f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 380px;
+  min-height: 480px;
+  position: relative;
+}
+
+input {
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  width: 80px;
+  margin: 5px;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#result {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  background-color: #f1f1f1;
+  color: #1B75BC;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  font-weight: bold;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#result.show {
+  opacity: 1;
+}
+
+.powered-by {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: bold;
+  opacity: 0.7;
+}
