@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>Exit Time</title>
+  <title>محاسبه‌گر تایم خروج</title>
   <link href="https://cdn.fontcdn.ir/Font/Persian/IranSans/IranSans.css" rel="stylesheet">
   <style>
     body {
@@ -89,9 +89,9 @@
     </div>
     <button onclick="calculateTime()">محاسبه</button>
     <div id="result">
-      <span>:ساعتی که می‌تونی بری</span>
+      <span>ساعتی که می‌تونی بری:</span>
       <br>
-      <span id="calculatedTime"></span> <!-- ساعت محاسبه شده اینجا نمایش داده می‌شود -->
+      <span id="calculatedTime"></span>
     </div>
 
     <div class="powered-by">Powered by Mason</div>
@@ -105,18 +105,35 @@
       if (isNaN(hour)) hour = 0;
       if (isNaN(minute)) minute = 0;
 
-      let totalMinutes = hour * 60 + minute + 8 * 60 + 45;
-      let finalHour = Math.floor(totalMinutes / 60) % 24;
-      let finalMinute = totalMinutes % 60;
+      let totalInputMinutes = hour * 60 + minute;
+      let workStartLimit = 9 * 60; // 9:00 صبح به دقیقه
+      let officialExitTime = { hour: 17, minute: 45 };
 
       const pad = (n) => n.toString().padStart(2, '0');
 
       let resultBox = document.getElementById('result');
       let calculatedTime = document.getElementById('calculatedTime');
-      resultBox.classList.remove('show'); // مخفی‌اش کن
-      calculatedTime.innerText = `${pad(finalHour)}:${pad(finalMinute)}`;
+      resultBox.classList.remove('show');
 
-      // با یه تاخیر کوچیک، دوباره نشونش بده
+      if (totalInputMinutes <= workStartLimit) {
+        // قبل یا تا ۹ صبح
+        let totalMinutes = totalInputMinutes + 8 * 60 + 45;
+        let finalHour = Math.floor(totalMinutes / 60) % 24;
+        let finalMinute = totalMinutes % 60;
+        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
+      } else {
+        // بعد از ۹ صبح
+        let delayMinutes = totalInputMinutes - workStartLimit;
+        let delayHourPart = Math.floor(delayMinutes / 60);
+        let delayMinutePart = delayMinutes % 60;
+
+        let delayStr = '';
+        if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
+        if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
+
+        calculatedTime.innerHTML = `17:45<br><span style="color: crimson; font-size: 1rem;">نیاز به ${delayStr.trim()} مرخصی</span>`;
+      }
+
       setTimeout(() => {
         resultBox.classList.add('show');
       }, 10);
