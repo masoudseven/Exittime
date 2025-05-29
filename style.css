@@ -27,18 +27,18 @@ body {
 }
 
 input {
-  width: 140px;              /* هم عرض دکمه */
-  padding: 0.8rem 1.5rem;    /* هم ارتفاع و فاصله داخلی */
+  width: 140px;
+  padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
   margin: 5px;
   border-radius: 30px;
   border: 1px solid #ccc;
   text-align: center;
-  box-sizing: border-box;    /* تضمین اندازه دقیق */
+  box-sizing: border-box;
 }
 
 button {
-  width: 140px;              /* هم عرض input */
+  width: 140px;
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
@@ -49,7 +49,7 @@ button {
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
-  box-sizing: border-box;    /* تضمین اندازه دقیق */
+  box-sizing: border-box;
 }
 
 button:hover {
@@ -66,7 +66,8 @@ button:hover {
   border-radius: 30px;
   display: block;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.4s ease;
   font-weight: bold;
   width: fit-content;
   margin-left: auto;
@@ -75,6 +76,7 @@ button:hover {
 
 #result.show {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .powered-by {
