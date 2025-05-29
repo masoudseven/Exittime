@@ -36,23 +36,22 @@ input {
   text-align: center;
 }
 
-/* دکمه با soft shadow */
 button {
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
   border-radius: 30px;
-  border: none;
-  background-color: #4CAF50;
-  color: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  background-color: transparent;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
   cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #45a049;
-  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.35);
+  background-color: #4CAF50;
+  color: white;
 }
 
 #result {
