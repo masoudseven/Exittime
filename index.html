@@ -46,7 +46,7 @@
         let baseMinutes = earlyBirdLimit + 8 * 60 + 45; // ۷:۰۰ + ۸:۴۵ = ۱۵:۴۵
         let finalHour = Math.floor(baseMinutes / 60) % 24;
         let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span style="color: green; font-size: 1rem;">تو که هنوز آفتاب نزده اومدی 😮 </span>`;
+        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span style="color: green; font-size: 1rem;">تو که هنوز آفتاب نزده اومدی 😮</span>`;
       } else if (totalInputMinutes <= workStartLimit) {
         // بین ۷ تا ۹ صبح اومده
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
@@ -63,7 +63,13 @@
         if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
         if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
 
-        calculatedTime.innerHTML = `17:45<br><span style="color: crimson; font-size: 1rem;">و باید ${delayStr.trim()} مرخصی بگیری</span>`;
+        calculatedTime.innerHTML = `
+          17:45
+          <br>
+          <span style="color: orange; font-size: 1rem;">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
+          <br>
+          <span style="color: crimson; font-size: 1rem;">و باید ${delayStr.trim()} مرخصی بگیری</span>
+        `;
       }
 
       setTimeout(() => {
