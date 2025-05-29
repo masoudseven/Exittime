@@ -36,43 +36,19 @@ input {
   text-align: center;
 }
 
-/* این بخش دکمه */
 button {
-  background-color: #4CAF50; /* رنگ سبز */
-  color: white;
-  padding: 12px 24px;
-  font-size: 1.1rem;
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 30px;
   border: none;
-  border-radius: 30px;  /* گرد */
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  transition: box-shadow 0.2s ease, background-color 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-button::after {
-  content: "";
-  position: absolute;
-  background: rgba(255,255,255,0.3);
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  top: 50%;
-  left: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.3s ease;
+  background-color: #4CAF50;
+  color: white;
+  transition: 0.3s;
 }
 
 button:hover {
-  background-color: #45a049; /* سبز تیره‌تر */
-  box-shadow: 0 6px 10px rgba(0,0,0,0.4);
-}
-
-button:hover::after {
-  transform: translate(-50%, -50%) scale(1);
-  transition: transform 0.3s ease;
+  background-color: #45a049;
 }
 
 #result {
