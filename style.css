@@ -36,8 +36,10 @@ input {
   text-align: center;
 }
 
-/* دکمه با افکت soft shadow */
+/* دکمه با Ripple Effect و بدون سایه */
 button {
+  position: relative;
+  overflow: hidden;
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
@@ -45,14 +47,28 @@ button {
   border: none;
   background-color: #4CAF50;
   color: white;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* 👈 Soft Shadow */
-  transition: 0.3s ease;
+  transition: background-color 0.3s ease;
   cursor: pointer;
 }
 
 button:hover {
   background-color: #45a049;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2); /* 👈 Slightly deeper on hover */
+}
+
+button .ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-animation 600ms linear;
+  background-color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 #result {
