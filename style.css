@@ -36,6 +36,7 @@ input {
   text-align: center;
 }
 
+/* دکمه با افکت soft shadow */
 button {
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
@@ -44,11 +45,14 @@ button {
   border: none;
   background-color: #4CAF50;
   color: white;
-  transition: 0.3s;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* 👈 Soft Shadow */
+  transition: 0.3s ease;
+  cursor: pointer;
 }
 
 button:hover {
   background-color: #45a049;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2); /* 👈 Slightly deeper on hover */
 }
 
 #result {
