@@ -39,7 +39,7 @@ body {
 
 .dark-mode .container {
   background-color: #2a2a2a;
-  color: #ddd;
+  color: #eee;
 }
 
 @keyframes fadeInScale {
@@ -54,8 +54,8 @@ body {
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 60px;
-  height: 30px;
+  width: 80px; /* بزرگتر شد */
+  height: 40px; /* بزرگتر شد */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,8 +72,8 @@ body {
 }
 
 .dark-mode-toggle .slider {
-  width: 50px;
-  height: 26px;
+  width: 70px; /* بزرگتر */
+  height: 34px; /* بزرگتر */
   background-color: #ccc;
   border-radius: 30px;
   position: relative;
@@ -81,15 +81,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 6px;
+  padding: 0 10px;
   box-sizing: border-box;
-  font-size: 18px;
+  font-size: 22px;
+  color: #777; /* خاکستری برای آیکون‌ها */
 }
 
 .dark-mode-toggle .icon-sun,
 .dark-mode-toggle .icon-moon {
   pointer-events: none;
   user-select: none;
+  color: #777; /* خاکستری */
 }
 
 .dark-mode-toggle input:checked + .slider {
@@ -97,14 +99,14 @@ body {
 }
 
 .dark-mode-toggle input:checked + .slider::before {
-  transform: translateX(24px);
+  transform: translateX(36px);
 }
 
 .dark-mode-toggle .slider::before {
   content: "";
   position: absolute;
-  height: 22px;
-  width: 22px;
+  height: 30px;
+  width: 30px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -118,6 +120,11 @@ h2 {
   color: #333;
   margin-bottom: 1.5rem;
   text-align: center;
+  transition: color 0.4s ease;
+}
+
+.dark-mode h2 {
+  color: #eee; /* روشن‌تر در دارک مود */
 }
 
 /* برچسب ورودی */
@@ -126,7 +133,12 @@ h2 {
   font-size: 1.1rem;
   margin-bottom: 10px;
   color: #444;
-  text-align: center; /* وسط چین */
+  text-align: center;
+  transition: color 0.4s ease;
+}
+
+.dark-mode .input-label {
+  color: #ddd; /* روشن‌تر در دارک مود */
 }
 
 /* گروپ اینپوت ها برای flex */
@@ -224,4 +236,55 @@ button:hover {
   display: block;
   font-size: 1rem;
   margin-top: 8px;
-  font-weight
+  font-weight: normal;
+}
+
+#calculatedTime .message-early {
+  color: #28a745;
+}
+
+#calculatedTime .message-late-info {
+  color: #ff9800;
+}
+
+#calculatedTime .message-leave-warning {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.powered-by {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: color 0.4s ease;
+}
+
+.dark-mode .powered-by {
+  color: #bbb;
+}
+
+/* 📱 ریسپانسیو برای موبایل */
+@media (max-width: 420px) {
+  .container {
+    width: 90%;
+    padding: 1.5rem;
+    min-height: 0;
+  }
+
+  input,
+  button {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #result {
+    font-size: 1.2rem;
+    padding: 0.6rem 1rem;
+  }
+}
