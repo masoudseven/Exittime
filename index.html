@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ExitTime</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Dark Mode Toggle -->
-  <div class="theme-toggle">
-    <label class="switch">
-      <input type="checkbox" id="themeToggle">
-      <span class="slider round"></span>
-    </label>
-  </div>
-
   <div class="container">
-    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
-    <div class="input-group">
-      <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
-      <input type="number" id="minuteInput" placeholder="دقیقه">
-      <input type="number" id="hourInput" placeholder="ساعت">
+    <div class="dark-mode-switch-wrapper">
+      <label class="dark-mode-switch" for="darkModeToggle">
+        <input type="checkbox" id="darkModeToggle" />
+        <span class="slider">
+          <span class="icon moon" title="دارک مود">&#9790;</span>
+          <span class="icon sun" title="لایت مود">&#9728;</span>
+        </span>
+      </label>
     </div>
+
+    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
+
+    <div style="margin-bottom: 20px;">
+      <label class="input-label center">تایم ورودتو وارد کن خوشگلم</label>
+      <input type="number" id="hourInput" placeholder="ساعت" />
+      <input type="number" id="minuteInput" placeholder="دقیقه" />
+    </div>
+
     <button onclick="calculateTime()">محاسبه</button>
+
     <div id="result">
       <span>:ساعتی که می‌تونی بری</span>
-      <br>
+      <br />
       <span id="calculatedTime"></span>
     </div>
+
     <div class="powered-by">Powered by Mason</div>
   </div>
 
   <script>
-    // دارک مود
-    document.getElementById('themeToggle').addEventListener('change', function () {
-      document.body.classList.toggle('dark-mode', this.checked);
+    // سوییچ دارک مود
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark', toggle.checked);
     });
 
     function calculateTime() {
@@ -44,8 +51,8 @@
       if (isNaN(minute)) minute = 0;
 
       let totalInputMinutes = hour * 60 + minute;
-      let workStartLimit = 9 * 60;
-      let earlyBirdLimit = 7 * 60;
+      let workStartLimit = 9 * 60; // 9:00 صبح
+      let earlyBirdLimit = 7 * 60; // 7:00 صبح
       const pad = (n) => n.toString().padStart(2, '0');
 
       let resultBox = document.getElementById('result');
@@ -53,10 +60,10 @@
       resultBox.classList.remove('show');
 
       if (totalInputMinutes < earlyBirdLimit) {
-        let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
+        let baseMinutes = earlyBirdLimit + 8 * 60 + 45; // ۷:۰۰ + ۸:۴۵ = ۱۵:۴۵
         let finalHour = Math.floor(baseMinutes / 60) % 24;
         let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>`;
+        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span style="color: green; font-size: 1rem;">تو که هنوز آفتاب نزده اومدی 😮</span>`;
       } else if (totalInputMinutes <= workStartLimit) {
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
         let finalHour = Math.floor(totalMinutes / 60) % 24;
@@ -67,22 +74,13 @@
         let delayHourPart = Math.floor(delayMinutes / 60);
         let delayMinutePart = delayMinutes % 60;
 
-        let delayStr = '';
+        let delayStr = "";
         if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
         if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
 
-        calculatedTime.innerHTML = `
-          17:45
-          <br>
-          <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
-          <br>
-          <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
-        `;
+        calculatedTime.innerHTML = `${delayStr}تاخیر داری و نمیتونی بیشتر بمونی!`;
       }
-
-      setTimeout(() => {
-        resultBox.classList.add('show');
-      }, 10);
+      resultBox.classList.add('show');
     }
   </script>
 </body>
