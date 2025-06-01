@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Estedad';
-  src: url('Estedad-Regular.woff2') format('woff2');
+  font-family: "Estedad";
+  src: url("Estedad-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'Estedad', sans-serif;
+  font-family: "Estedad", sans-serif;
   background: #eef2f3;
   display: flex;
   align-items: center;
@@ -14,8 +14,12 @@ body {
   height: 100vh;
   margin: 0;
   direction: rtl;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  color: #333;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.dark-mode {
+  background-color: #1a1a1a;
+  color: #ddd;
 }
 
 .container {
@@ -30,7 +34,12 @@ body {
   opacity: 0;
   transform: scale(0.95);
   animation: fadeInScale 0.6s ease forwards;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.dark-mode .container {
+  background-color: #2a2a2a;
+  color: #ddd;
 }
 
 @keyframes fadeInScale {
@@ -40,96 +49,101 @@ body {
   }
 }
 
-/* -- Dark Mode -- */
-body.dark {
-  background-color: #121212;
-  color: #ddd;
-}
-
-body.dark .container {
-  background-color: #222;
-  color: #ddd;
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
-}
-
-/* -- Dark Mode Switch Wrapper */
-.dark-mode-switch-wrapper {
-  width: 380px;
-  margin: 0 auto 15px auto;
-  text-align: right;
-  position: relative;
-}
-
-/* -- Dark Mode Switch */
-.dark-mode-switch {
-  position: relative;
-  display: inline-block;
+/* دکمه سوییچ دارک مود */
+.dark-mode-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   width: 60px;
   height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  z-index: 10;
 }
 
-.dark-mode-switch input {
+.dark-mode-toggle input {
   opacity: 0;
   width: 0;
   height: 0;
+  position: absolute;
 }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
+.dark-mode-toggle .slider {
+  width: 50px;
+  height: 26px;
   background-color: #ccc;
-  border-radius: 34px;
-  top: 0; left: 0; right: 0; bottom: 0;
-  transition: background-color 0.4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 24px;
-  width: 24px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.4s;
-}
-
-.dark-mode-switch input:checked + .slider {
-  background-color: #4caf50;
-}
-
-.dark-mode-switch input:checked + .slider:before {
-  transform: translateX(30px);
-}
-
-/* -- Icons -- */
-.icon {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  border-radius: 30px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  box-sizing: border-box;
   font-size: 18px;
+}
+
+.dark-mode-toggle .icon-sun,
+.dark-mode-toggle .icon-moon {
   pointer-events: none;
   user-select: none;
 }
 
-.icon.moon {
-  left: 8px;
-  color: #444;
+.dark-mode-toggle input:checked + .slider {
+  background-color: #4caf50;
 }
 
-.icon.sun {
-  right: 8px;
-  color: #f39c12;
+.dark-mode-toggle input:checked + .slider::before {
+  transform: translateX(24px);
 }
 
-/* -- Inputs */
+.dark-mode-toggle .slider::before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+/* وسط چین کردن عنوان */
+h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* برچسب ورودی */
 .input-label {
   display: block;
   font-size: 1.1rem;
   margin-bottom: 10px;
   color: #444;
-  text-align: center; /* وسط چین شده */
+  text-align: center; /* وسط چین */
+}
+
+/* گروپ اینپوت ها برای flex */
+.input-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+/* جای ساعت سمت چپ */
+#hourInput {
+  order: 1;
+}
+
+#minuteInput {
+  order: 2;
 }
 
 input {
@@ -141,13 +155,13 @@ input {
   border: 1px solid #ccc;
   text-align: center;
   box-sizing: border-box;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark input {
-  background-color: #333;
+.dark-mode input {
+  background-color: #444;
   color: #eee;
-  border-color: #555;
+  border-color: #666;
 }
 
 button {
@@ -170,6 +184,16 @@ button:hover {
   color: white;
 }
 
+.dark-mode button {
+  color: #90ee90;
+  border-color: #90ee90;
+}
+
+.dark-mode button:hover {
+  background-color: #90ee90;
+  color: #222;
+}
+
 #result {
   margin-top: 1.5rem;
   font-size: 1.4rem;
@@ -186,9 +210,9 @@ button:hover {
   margin-right: auto;
 }
 
-body.dark #result {
+.dark-mode #result {
   background-color: #333;
-  color: #73a6ff;
+  color: #a0c8ff;
 }
 
 #result.show {
@@ -196,39 +220,8 @@ body.dark #result {
   transform: translateY(0);
 }
 
-.powered-by {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.9rem;
-  color: #555;
-  font-weight: bold;
-  opacity: 0.7;
-  transition: color 0.3s ease;
-}
-
-body.dark .powered-by {
-  color: #bbb;
-}
-
-/* ریسپانسیو */
-@media (max-width: 420px) {
-  .container {
-    width: 90%;
-    padding: 1.5rem;
-    min-height: 0;
-  }
-
-  input,
-  button {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  #result {
-    font-size: 1.2rem;
-    padding: 0.6rem 1rem;
-  }
-}
+#calculatedTime .message {
+  display: block;
+  font-size: 1rem;
+  margin-top: 8px;
+  font-weight
