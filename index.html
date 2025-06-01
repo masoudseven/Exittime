@@ -39,8 +39,15 @@
       let hour = parseInt(document.getElementById('hourInput').value);
       let minute = parseInt(document.getElementById('minuteInput').value);
 
-      if (isNaN(hour)) hour = 0;
-      if (isNaN(minute)) minute = 0;
+      // اعتبارسنجی
+      if (isNaN(hour) || isNaN(minute)) {
+        alert("لطفاً هر دو مقدار ساعت و دقیقه را وارد کن.");
+        return;
+      }
+      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+        alert("ساعت باید بین ۰ تا ۲۳ و دقیقه بین ۰ تا ۵۹ باشد.");
+        return;
+      }
 
       let totalInputMinutes = hour * 60 + minute;
       let workStartLimit = 9 * 60;
