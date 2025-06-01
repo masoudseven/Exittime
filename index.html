@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>ExitTime</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <link rel="stylesheet" href="style.css"> </head>
 <body>
   <div class="container">
     <h2>محاسبه‌گر تایم خروج از شرکت</h2>
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-size: 1.1rem; margin-bottom: 8px;">
+    <div class="input-group"> <label for="hourInput" class="input-label">
         تایم ورودتو وارد کن خوشگلم
       </label>
       <input type="number" id="hourInput" placeholder="ساعت">
       <input type="number" id="minuteInput" placeholder="دقیقه">
     </div>
     <button onclick="calculateTime()">محاسبه</button>
-    <div id="result">
-      <span>:ساعتی که می‌تونی بری</span>
+    <div id="result"> <span>:ساعتی که می‌تونی بری</span>
       <br>
       <span id="calculatedTime"></span>
     </div>
@@ -37,24 +34,26 @@
       let earlyBirdLimit = 7 * 60;       // 7:00 صبح
       const pad = (n) => n.toString().padStart(2, '0');
 
-      let resultBox = document.getElementById('result');
-      let calculatedTime = document.getElementById('calculatedTime');
-      resultBox.classList.remove('show');
+      let resultBox = document.getElementById('result'); // این به div با id="result" اشاره دارد
+      let calculatedTimeEl = document.getElementById('calculatedTime');
+      
+      resultBox.classList.remove('show'); // برای انیمیشن شما
+
+      // پاک کردن پیام‌های قبلی و کلاس‌های مربوط به آنها
+      calculatedTimeEl.innerHTML = '';
+      // calculatedTimeEl.className = ''; // اگر کلاس‌های دیگری به خود calculatedTimeEl اضافه می‌کنید، این خط را نگه دارید
 
       if (totalInputMinutes < earlyBirdLimit) {
-        // زودتر از ۷ صبح اومده
-        let baseMinutes = earlyBirdLimit + 8 * 60 + 45; // ۷:۰۰ + ۸:۴۵ = ۱۵:۴۵
+        let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
         let finalHour = Math.floor(baseMinutes / 60) % 24;
         let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span style="color: green; font-size: 1rem;">تو که هنوز آفتاب نزده اومدی 😮</span>`;
+        calculatedTimeEl.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>`;
       } else if (totalInputMinutes <= workStartLimit) {
-        // بین ۷ تا ۹ صبح اومده
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
         let finalHour = Math.floor(totalMinutes / 60) % 24;
         let finalMinute = totalMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
+        calculatedTimeEl.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
       } else {
-        // دیرتر از ۹ صبح اومده
         let delayMinutes = totalInputMinutes - workStartLimit;
         let delayHourPart = Math.floor(delayMinutes / 60);
         let delayMinutePart = delayMinutes % 60;
@@ -63,18 +62,18 @@
         if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
         if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
 
-        calculatedTime.innerHTML = `
+        calculatedTimeEl.innerHTML = `
           17:45
           <br>
-          <span style="color: orange; font-size: 1rem;">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
+          <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
           <br>
-          <span style="color: crimson; font-size: 1rem;">و باید ${delayStr.trim()} مرخصی بگیری</span>
+          <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
         `;
       }
 
       setTimeout(() => {
         resultBox.classList.add('show');
-      }, 10);
+      }, 10); // اطمینان از اعمال تغییرات DOM قبل از نمایش با انیمیشن
     }
   </script>
 </body>
