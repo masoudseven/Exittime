@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ExitTime</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="theme-toggle">
     <label>
-      <input type="checkbox" id="darkModeToggle"> حالت تاریک
+      <input type="checkbox" id="darkModeToggle" /> حالت تاریک
     </label>
   </div>
 
@@ -18,18 +18,18 @@
     <div class="input-group">
       <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
       <div class="input-wrapper">
-        <input type="number" id="minuteInput" placeholder="دقیقه">
-        <input type="number" id="hourInput" placeholder="ساعت">
+        <input type="number" id="minuteInput" placeholder="دقیقه" />
+        <input type="number" id="hourInput" placeholder="ساعت" />
       </div>
     </div>
 
     <button onclick="calculateTime()">محاسبه</button>
 
-    <div id="errorBox" class="error-box"></div>
+    <div id="errorBox"></div>
 
     <div id="result">
       <span>:ساعتی که می‌تونی بری</span>
-      <br>
+      <br />
       <span id="calculatedTime"></span>
     </div>
 
@@ -37,37 +37,40 @@
   </div>
 
   <script>
-    function showError(message) {
-      const errorBox = document.getElementById('errorBox');
-      errorBox.textContent = message;
-      errorBox.classList.add('show');
-      setTimeout(() => {
-        errorBox.classList.remove('show');
-      }, 4000);
-    }
-
     function calculateTime() {
-      let hour = parseInt(document.getElementById('hourInput').value);
-      let minute = parseInt(document.getElementById('minuteInput').value);
+      let hour = parseInt(document.getElementById("hourInput").value);
+      let minute = parseInt(document.getElementById("minuteInput").value);
+      const errorBox = document.getElementById("errorBox");
+      const resultBox = document.getElementById("result");
+      const calculatedTime = document.getElementById("calculatedTime");
 
-      if (isNaN(hour) || isNaN(minute)) {
-        showError("خب حداقل یه چیزی بزن دیگه 😅");
+      // پاک کردن نتیجه قبلی
+      resultBox.classList.remove("show");
+      calculatedTime.innerHTML = "";
+
+      // اعتبارسنجی ورودی
+      if (
+        isNaN(hour) ||
+        isNaN(minute) ||
+        hour < 0 ||
+        hour > 23 ||
+        minute < 0 ||
+        minute > 59
+      ) {
+        errorBox.textContent =
+          "یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه";
+        errorBox.classList.add("show");
         return;
       }
 
-      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        showError("یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه");
-        return;
-      }
+      // ورودی درسته → ارور رو پاک کن
+      errorBox.classList.remove("show");
+      errorBox.textContent = "";
 
       let totalInputMinutes = hour * 60 + minute;
       let workStartLimit = 9 * 60;
       let earlyBirdLimit = 7 * 60;
-      const pad = (n) => n.toString().padStart(2, '0');
-
-      let resultBox = document.getElementById('result');
-      let calculatedTime = document.getElementById('calculatedTime');
-      resultBox.classList.remove('show');
+      const pad = (n) => n.toString().padStart(2, "0");
 
       if (totalInputMinutes < earlyBirdLimit) {
         let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
@@ -87,7 +90,7 @@
         let delayHourPart = Math.floor(delayMinutes / 60);
         let delayMinutePart = delayMinutes % 60;
 
-        let delayStr = '';
+        let delayStr = "";
         if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
         if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
 
@@ -99,14 +102,16 @@
       }
 
       setTimeout(() => {
-        resultBox.classList.add('show');
+        resultBox.classList.add("show");
       }, 10);
     }
 
     // دارک مود
-    document.getElementById('darkModeToggle').addEventListener('change', function() {
-      document.body.classList.toggle('dark-mode', this.checked);
-    });
+    document
+      .getElementById("darkModeToggle")
+      .addEventListener("change", function () {
+        document.body.classList.toggle("dark-mode", this.checked);
+      });
   </script>
 </body>
 </html>
