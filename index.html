@@ -1,101 +1,66 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>ExitTime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ورود زمان با دارک مود</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- سوییچ دارک مود بیرون کانتینر، بالای آن -->
+  <label class="dark-mode-toggle">
+    <input type="checkbox" id="darkModeToggle" />
+    <span class="slider">
+      <span class="icon-sun">☀️</span>
+      <span class="icon-moon">🌙</span>
+    </span>
+  </label>
+
   <div class="container">
-    <label class="dark-mode-toggle">
-      <input type="checkbox" id="darkModeToggle" />
-      <span class="slider">
-        <span class="icon-sun">☀️</span>
-        <span class="icon-moon">🌙</span>
-      </span>
-    </label>
-
-    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
-
-    <div style="margin-bottom: 20px;">
-      <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
-
-      <div class="input-group">
-        <input type="number" id="hourInput" placeholder="ساعت" min="0" max="23" />
-        <input type="number" id="minuteInput" placeholder="دقیقه" min="0" max="59" />
+    <h2>لطفا زمان ورودتو وارد کن</h2>
+    <div class="input-group">
+      <div>
+        <label class="input-label" for="hourInput">ساعت</label>
+        <input type="number" id="hourInput" min="0" max="23" />
+      </div>
+      <div>
+        <label class="input-label" for="minuteInput">دقیقه</label>
+        <input type="number" id="minuteInput" min="0" max="59" />
       </div>
     </div>
-
-    <button onclick="calculateTime()">محاسبه</button>
-
-    <div id="result">
-      <span>:ساعتی که می‌تونی بری</span>
-      <br />
-      <span id="calculatedTime"></span>
-    </div>
-
-    <div class="powered-by">Powered by Mason</div>
+    <button id="calculateBtn">محاسبه کن</button>
+    <div id="result"></div>
+    <div id="calculatedTime"></div>
+    <div class="powered-by">Powered by ChatGPT</div>
   </div>
 
   <script>
-    function calculateTime() {
-      let hour = parseInt(document.getElementById("hourInput").value);
-      let minute = parseInt(document.getElementById("minuteInput").value);
-
-      if (isNaN(hour)) hour = 0;
-      if (isNaN(minute)) minute = 0;
-
-      let totalInputMinutes = hour * 60 + minute;
-      let workStartLimit = 9 * 60; // 9:00 صبح
-      let earlyBirdLimit = 7 * 60; // 7:00 صبح
-      const pad = (n) => n.toString().padStart(2, "0");
-
-      let resultBox = document.getElementById("result");
-      let calculatedTime = document.getElementById("calculatedTime");
-      resultBox.classList.remove("show");
-
-      if (totalInputMinutes < earlyBirdLimit) {
-        // زودتر از ۷ صبح اومده
-        let baseMinutes = earlyBirdLimit + 8 * 60 + 45; // ۷:۰۰ + ۸:۴۵ = ۱۵:۴۵
-        let finalHour = Math.floor(baseMinutes / 60) % 24;
-        let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(
-          finalMinute
-        )}<br><span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>`;
-      } else if (totalInputMinutes <= workStartLimit) {
-        // بین ۷ تا ۹ صبح اومده
-        let totalMinutes = totalInputMinutes + 8 * 60 + 45;
-        let finalHour = Math.floor(totalMinutes / 60) % 24;
-        let finalMinute = totalMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
-      } else {
-        // دیرتر از ۹ صبح اومده
-        let delayMinutes = totalInputMinutes - workStartLimit;
-        let delayHourPart = Math.floor(delayMinutes / 60);
-        let delayMinutePart = delayMinutes % 60;
-
-        let delayStr = "";
-        if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
-        if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
-
-        calculatedTime.innerHTML = `
-          17:45
-          <br />
-          <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
-          <br />
-          <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
-        `;
-      }
-
-      setTimeout(() => {
-        resultBox.classList.add("show");
-      }, 10);
-    }
-
-    // Dark mode toggle
     const toggle = document.getElementById("darkModeToggle");
+    const body = document.body;
+
     toggle.addEventListener("change", () => {
-      document.body.classList.toggle("dark-mode", toggle.checked);
+      body.classList.toggle("dark-mode", toggle.checked);
+    });
+
+    // جاوااسکریپت محاسبه زمان (نمونه ساده)
+    document.getElementById("calculateBtn").addEventListener("click", () => {
+      const h = parseInt(document.getElementById("hourInput").value);
+      const m = parseInt(document.getElementById("minuteInput").value);
+      const resultDiv = document.getElementById("result");
+      if (
+        isNaN(h) ||
+        isNaN(m) ||
+        h < 0 ||
+        h > 23 ||
+        m < 0 ||
+        m > 59
+      ) {
+        resultDiv.textContent = "زمان معتبر وارد کنید";
+        resultDiv.classList.add("show");
+        return;
+      }
+      resultDiv.textContent = `زمان وارد شده: ${h} ساعت و ${m} دقیقه`;
+      resultDiv.classList.add("show");
     });
   </script>
 </body>
