@@ -24,7 +24,7 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
   width: 380px;
-  min-height: 480px;
+  min-height: 500px;
   position: relative;
   opacity: 0;
   transform: scale(0.95);
@@ -130,6 +130,22 @@ button:hover {
   font-weight: bold;
 }
 
+#errorBox {
+  display: none;
+  margin-top: 1rem;
+  padding: 0.8rem 1.2rem;
+  background-color: #ffe5e5; /* قرمز ملایم */
+  border: 1px solid #f5c2c2;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+}
+
+#errorBox.show {
+  display: block;
+}
+
 .powered-by {
   position: absolute;
   bottom: 10px;
@@ -171,9 +187,9 @@ body.dark-mode input {
 }
 
 body.dark-mode button {
-  border-color: #4CAF50;      /* سبز */
+  border-color: #4CAF50;
   background-color: transparent;
-  color: #4CAF50;             /* سبز */
+  color: #4CAF50;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -189,13 +205,18 @@ body.dark-mode #result {
   color: #a0d8ff;
 }
 
-/* این قسمت اضافه شده برای روشن‌تر شدن تیتر در دارک مود */
 body.dark-mode h2 {
   color: #eee;
 }
 
 body.dark-mode .powered-by {
   color: #aaa;
+}
+
+body.dark-mode #errorBox {
+  background-color: #5a1a1a;
+  border-color: #aa4444;
+  color: #f2f2f2;
 }
 
 /* 📱 ریسپانسیو */
