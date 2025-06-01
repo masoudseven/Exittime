@@ -89,6 +89,27 @@ button:hover {
   color: white;
 }
 
+#errorBox {
+  background-color: #fdecea;
+  color: #d32f2f;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+#errorBox.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #result {
   margin-top: 1.5rem;
   font-size: 1.4rem;
@@ -128,22 +149,6 @@ button:hover {
 #calculatedTime .message-leave-warning {
   color: #f44336;
   font-weight: bold;
-}
-
-#errorBox {
-  display: none;
-  margin-top: 1rem;
-  padding: 0.8rem 1.2rem;
-  background-color: #ffe5e5; /* قرمز ملایم */
-  border: 1px solid #f5c2c2;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #333;
-}
-
-#errorBox.show {
-  display: block;
 }
 
 .powered-by {
@@ -190,9 +195,6 @@ body.dark-mode button {
   border-color: #4CAF50;
   background-color: transparent;
   color: #4CAF50;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
 }
 
 body.dark-mode button:hover {
@@ -214,9 +216,8 @@ body.dark-mode .powered-by {
 }
 
 body.dark-mode #errorBox {
-  background-color: #5a1a1a;
-  border-color: #aa4444;
-  color: #f2f2f2;
+  background-color: #502222;
+  color: #ff8a80;
 }
 
 /* 📱 ریسپانسیو */
