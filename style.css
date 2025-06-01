@@ -14,6 +14,7 @@ body {
   height: 100vh;
   margin: 0;
   direction: rtl;
+  position: relative;
 }
 
 .container {
@@ -42,11 +43,26 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-label {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 input {
   width: 140px;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
-  margin: 5px;
   border-radius: 30px;
   border: 1px solid #ccc;
   text-align: center;
@@ -94,7 +110,6 @@ button:hover {
   transform: translateY(0);
 }
 
-/* ✅ پیام‌های رنگی مخصوص خروجی */
 #calculatedTime .message {
   display: block;
   font-size: 1rem;
@@ -115,7 +130,17 @@ button:hover {
   font-weight: bold;
 }
 
-/* 🔘 دکمه دارک مود */
+.powered-by {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
 .theme-toggle {
   position: absolute;
   top: 15px;
@@ -129,7 +154,6 @@ button:hover {
   margin-left: 8px;
 }
 
-/* 🌙 حالت دارک مود */
 body.dark-mode {
   background: #1e1e1e;
   color: #eee;
@@ -156,7 +180,7 @@ body.dark-mode .powered-by {
   color: #aaa;
 }
 
-/* 📱 ریسپانسیو برای موبایل */
+/* 📱 ریسپانسیو */
 @media (max-width: 420px) {
   .container {
     width: 90%;
@@ -164,11 +188,14 @@ body.dark-mode .powered-by {
     min-height: 0;
   }
 
+  .input-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   input,
   button {
     width: 100%;
-    margin-left: 0;
-    margin-right: 0;
   }
 
   #result {
