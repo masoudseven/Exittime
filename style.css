@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Estedad';
-  src: url('Estedad-Regular.woff2') format('woff2'); /* مطمئن شوید مسیر فایل فونت صحیح است */
+  src: url('Estedad-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -13,7 +13,6 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
-  direction: rtl; /* برای اطمینان از راست‌چین بودن کل صفحه */
 }
 
 .container {
@@ -23,7 +22,7 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
   width: 380px;
-  min-height: 480px; /* شاید بخواهید این را بر اساس محتوا تنظیم کنید یا بردارید */
+  min-height: 480px;
   position: relative;
   opacity: 0;
   transform: scale(0.95);
@@ -37,30 +36,9 @@ body {
   }
 }
 
-/* استایل برای عنوان اصلی */
-h2 {
-  color: #333; /* یا رنگ دلخواه شما */
-  margin-bottom: 1.5rem; /* ایجاد فاصله با عناصر بعدی */
-}
-
-/* استایل برای برچسب ورودی‌ها */
-.input-label {
-  display: block; /* نمایش در خط جداگانه */
-  font-size: 1.1rem; /* اندازه فونت مشابه چیزی که قبلا داشتید */
-  margin-bottom: 10px; /* فاصله از اینپوت‌ها */
-  color: #444; /* رنگ متن برچسب */
-  text-align: right; /* یا center اگر ترجیح می‌دهید */
-}
-
-/* اگر از .input-group استفاده می‌کنید، می‌توانید برای آن هم استایل تعریف کنید */
-.input-group {
-    margin-bottom: 1rem; /* فاصله از دکمه محاسبه */
-}
-
 input {
-  width: 140px; /* شما عرض را مشخص کرده‌اید، برای دو اینپوت کنار هم خوب است */
-  padding: 0.8rem 1.5rem; /* احتمالا منظورتان padding عمودی و افقی بوده، اما برای اینپوت عددی شاید 1.5rem زیاد باشد. */
-  /* padding: 0.8rem 0.5rem; بصورت جایگزین برای خوانایی بهتر عدد داخل اینپوت */
+  width: 140px;
+  padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
   margin: 5px;
   border-radius: 30px;
@@ -70,8 +48,7 @@ input {
 }
 
 button {
-  width: 140px; /* اگر می‌خواهید دکمه هم اندازه اینپوت‌ها باشد */
-  /* width: auto; یا اگر می‌خواهید بر اساس محتوا باشد و padding کنترل کند */
+  width: 140px;
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
@@ -94,15 +71,15 @@ button:hover {
   margin-top: 1.5rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
-  color: #1B75BC; /* رنگ زمان محاسبه شده اصلی */
+  color: #1B75BC;
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
-  /* display: block; در صورت نیاز، اما با width: fit-content خودش بلاک می‌شود */
+  display: block;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.4s ease;
   font-weight: bold;
-  width: fit-content; /* برای اینکه عرض بر اساس محتوا باشد و در مرکز قرار گیرد */
+  width: fit-content;
   margin-left: auto;
   margin-right: auto;
 }
@@ -112,27 +89,6 @@ button:hover {
   transform: translateY(0);
 }
 
-/* استایل برای پیام‌های داینامیک که توسط جاوااسکریپت داخل #calculatedTime قرار می‌گیرند */
-#calculatedTime .message {
-  display: block; /* هر پیام در خط جدید */
-  font-size: 1rem;  /* می‌توانید این اندازه را تغییر دهید */
-  margin-top: 8px;
-  font-weight: normal; /* برای اینکه پیام‌ها از حالت bold اصلی #result متمایز شوند */
-}
-
-#calculatedTime .message-early {
-  color: #28a745; /* سبز */
-}
-
-#calculatedTime .message-late-info {
-  color: #ff9800; /* نارنجی */
-}
-
-#calculatedTime .message-leave-warning {
-  color: #f44336; /* قرمز */
-  font-weight: bold; /* این پیام مهم‌تر است */
-}
-
 .powered-by {
   position: absolute;
   bottom: 10px;
@@ -140,30 +96,21 @@ button:hover {
   transform: translateX(-50%);
   font-size: 0.9rem;
   color: #555;
-  font-weight: bold; /* شما این را داشتید، حفظ شده */
+  font-weight: bold;
   opacity: 0.7;
 }
 
-/* 📱 ریسپانسیو برای موبایل */
+/* ð± Ø±ÛØ³Ù¾Ø§ÙØ³ÛÙ Ø¨Ø±Ø§Û ÙÙØ¨Ø§ÛÙ */
 @media (max-width: 420px) {
   .container {
     width: 90%;
     padding: 1.5rem;
-    min-height: 0; /* در موبایل ارتفاع را آزاد بگذارید */
   }
 
   input,
   button {
-    width: 100%; /* تمام عرض در موبایل */
-    margin-left: 0;
-    margin-right: 0;
+    width: 100%;
   }
-  
-  /* اگر دو اینپوت دارید و می‌خواهید در موبایل هم کنار هم باشند، باید عرض را کمتر از 100% بگذارید، مثلا 48% با کمی margin */
-  /* input {
-    width: calc(50% - 10px); 
-  } */
-
 
   #result {
     font-size: 1.2rem;
