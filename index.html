@@ -75,7 +75,7 @@
         let finalMinute = baseMinutes % 60;
         calculatedTime.innerHTML = `
           ${pad(finalHour)}:${pad(finalMinute)}
-          <span class="message message-early">😨تو که هنوز آفتاب نزده اومدی </span>
+          <span class="message message-early">تو که هنوز آفتاب نزده اومدی😨 </span>
         `;
       } else if (totalInputMinutes <= workStartLimit) {
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
@@ -93,7 +93,7 @@
 
         calculatedTime.innerHTML = `
           17:45
-          <span class="message message-late-info"> 😉یه کوچولو دیر اومدی ولی اوکیه </span>
+          <span class="message message-late-info">😉یه کوچولو دیر اومدی ولی اوکیه </span>
           <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
         `;
       }
@@ -103,11 +103,9 @@
       }, 10);
     }
 
-    document
-      .getElementById("darkModeToggle")
-      .addEventListener("change", function () {
-        document.body.classList.toggle("dark-mode", this.checked);
-      });
+    document.getElementById("darkModeToggle").addEventListener("change", function () {
+      document.body.classList.toggle("dark-mode", this.checked);
+    });
   </script>
 </body>
 </html>
