@@ -15,6 +15,7 @@ body {
   margin: 0;
   direction: rtl;
   transition: background-color 0.4s ease, color 0.4s ease;
+  position: relative; /* برای جایگذاری توگل بیرون */
 }
 
 .dark-mode {
@@ -35,6 +36,8 @@ body {
   transform: scale(0.95);
   animation: fadeInScale 0.6s ease forwards;
   transition: background-color 0.4s ease, color 0.4s ease;
+  /* توگل بیرون مستطیل */
+  margin-top: 40px; /* جا برای توگل بالا */
 }
 
 .dark-mode .container {
@@ -49,13 +52,13 @@ body {
   }
 }
 
-/* دکمه سوییچ دارک مود */
+/* دکمه سوییچ دارک مود - کوچکتر و بیرون از کانتینر */
 .dark-mode-toggle {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 80px; /* بزرگتر شد */
-  height: 40px; /* بزرگتر شد */
+  top: 5px;
+  right: calc(50% - 190px); /* چون کانتینر 380px عرض داره، نصفش 190 */
+  width: 60px; /* کوچکتر */
+  height: 30px; /* کوچکتر */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,8 +75,8 @@ body {
 }
 
 .dark-mode-toggle .slider {
-  width: 70px; /* بزرگتر */
-  height: 34px; /* بزرگتر */
+  width: 52px; /* کوچکتر */
+  height: 26px; /* کوچکتر */
   background-color: #ccc;
   border-radius: 30px;
   position: relative;
@@ -81,17 +84,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 8px;
   box-sizing: border-box;
-  font-size: 22px;
-  color: #777; /* خاکستری برای آیکون‌ها */
+  font-size: 18px; /* کوچکتر */
+  color: #777;
 }
 
 .dark-mode-toggle .icon-sun,
 .dark-mode-toggle .icon-moon {
   pointer-events: none;
   user-select: none;
-  color: #777; /* خاکستری */
+  color: #777;
+  font-size: 18px; /* کوچکتر */
 }
 
 .dark-mode-toggle input:checked + .slider {
@@ -99,14 +103,14 @@ body {
 }
 
 .dark-mode-toggle input:checked + .slider::before {
-  transform: translateX(36px);
+  transform: translateX(26px);
 }
 
 .dark-mode-toggle .slider::before {
   content: "";
   position: absolute;
-  height: 30px;
-  width: 30px;
+  height: 22px;
+  width: 22px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -124,7 +128,7 @@ h2 {
 }
 
 .dark-mode h2 {
-  color: #eee; /* روشن‌تر در دارک مود */
+  color: #eee;
 }
 
 /* برچسب ورودی */
@@ -138,10 +142,10 @@ h2 {
 }
 
 .dark-mode .input-label {
-  color: #ddd; /* روشن‌تر در دارک مود */
+  color: #ddd;
 }
 
-/* گروپ اینپوت ها برای flex */
+/* گروپ اینپوت ها */
 .input-group {
   display: flex;
   justify-content: center;
