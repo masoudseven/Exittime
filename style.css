@@ -14,7 +14,75 @@ body {
   height: 100vh;
   margin: 0;
   direction: rtl;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* دارک مود */
+body.dark-mode {
+  background: #1e1e1e;
+  color: #eee;
+}
+body.dark-mode .container {
+  background: #2c2c2c;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+body.dark-mode input,
+body.dark-mode button {
+  border-color: #666;
+}
+body.dark-mode #result {
+  background-color: #444;
+  color: #90caf9;
+}
+body.dark-mode .powered-by {
+  color: #aaa;
+}
+
+/* سوییچ دارک مود */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+.switch {
   position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  right: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:checked + .slider:before {
+  transform: translateX(-26px);
 }
 
 .container {
@@ -43,26 +111,23 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
-.input-group {
-  margin-bottom: 1.5rem;
-}
-
 .input-label {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
   display: block;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: #444;
+  text-align: right;
 }
 
-.input-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+.input-group {
+  margin-bottom: 1rem;
 }
 
 input {
   width: 140px;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
+  margin: 5px;
   border-radius: 30px;
   border: 1px solid #ccc;
   text-align: center;
@@ -83,7 +148,6 @@ button {
   font-weight: bold;
   box-sizing: border-box;
 }
-
 button:hover {
   background-color: #4CAF50;
   color: white;
@@ -104,7 +168,6 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
 }
-
 #result.show {
   opacity: 1;
   transform: translateY(0);
@@ -116,16 +179,13 @@ button:hover {
   margin-top: 8px;
   font-weight: normal;
 }
-
-#calculatedTime .message-early {
+.message-early {
   color: #28a745;
 }
-
-#calculatedTime .message-late-info {
+.message-late-info {
   color: #ff9800;
 }
-
-#calculatedTime .message-leave-warning {
+.message-leave-warning {
   color: #f44336;
   font-weight: bold;
 }
@@ -141,63 +201,18 @@ button:hover {
   opacity: 0.7;
 }
 
-.theme-toggle {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 0.9rem;
-  color: #333;
-  z-index: 10;
-}
-
-.theme-toggle input {
-  margin-left: 8px;
-}
-
-body.dark-mode {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-body.dark-mode .container {
-  background: #2c2c2c;
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
-}
-
-body.dark-mode input,
-body.dark-mode button {
-  border-color: #666;
-  background-color: #444;
-  color: #eee;
-}
-
-body.dark-mode #result {
-  background-color: #333;
-  color: #81d4fa;
-}
-
-body.dark-mode .powered-by {
-  color: #aaa;
-}
-
-/* 📱 ریسپانسیو */
 @media (max-width: 420px) {
   .container {
     width: 90%;
     padding: 1.5rem;
     min-height: 0;
   }
-
-  .input-wrapper {
-    flex-direction: column;
-    gap: 10px;
-  }
-
   input,
   button {
     width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
-
   #result {
     font-size: 1.2rem;
     padding: 0.6rem 1rem;
