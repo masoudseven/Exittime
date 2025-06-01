@@ -25,6 +25,8 @@
 
     <button onclick="calculateTime()">محاسبه</button>
 
+    <div id="errorBox" class="error-box"></div>
+
     <div id="result">
       <span>:ساعتی که می‌تونی بری</span>
       <br>
@@ -35,17 +37,26 @@
   </div>
 
   <script>
+    function showError(message) {
+      const errorBox = document.getElementById('errorBox');
+      errorBox.textContent = message;
+      errorBox.classList.add('show');
+      setTimeout(() => {
+        errorBox.classList.remove('show');
+      }, 4000);
+    }
+
     function calculateTime() {
       let hour = parseInt(document.getElementById('hourInput').value);
       let minute = parseInt(document.getElementById('minuteInput').value);
 
-      // اعتبارسنجی
       if (isNaN(hour) || isNaN(minute)) {
-        alert("لطفاً هر دو مقدار ساعت و دقیقه را وارد کن.");
+        showError("خب حداقل یه چیزی بزن دیگه 😅");
         return;
       }
+
       if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        alert("ساعت باید بین ۰ تا ۲۳ و دقیقه بین ۰ تا ۵۹ باشد.");
+        showError("یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه");
         return;
       }
 
