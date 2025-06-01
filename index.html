@@ -28,7 +28,7 @@
     <div id="errorBox"></div>
 
     <div id="result">
-      <span>:ساعتی که می‌تونی بری</span>
+      <span>ساعتی که می‌تونی بری:</span>
       <br />
       <span id="calculatedTime"></span>
     </div>
@@ -78,7 +78,7 @@
         let finalMinute = baseMinutes % 60;
         calculatedTime.innerHTML = `
           ${pad(finalHour)}:${pad(finalMinute)}
-          <span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>
+          <span class="message message-early">😨تو که هنوز آفتاب نزده اومدی </span>
         `;
       } else if (totalInputMinutes <= workStartLimit) {
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
@@ -96,7 +96,7 @@
 
         calculatedTime.innerHTML = `
           17:45
-          <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
+          <span class="message message-late-info"> 😉یه کوچولو دیر اومدی ولی اوکیه </span>
           <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
         `;
       }
