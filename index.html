@@ -6,35 +6,36 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Dark Mode Toggle -->
   <div class="theme-toggle">
-    <label>
-      <input type="checkbox" id="darkModeToggle"> حالت تاریک
+    <label class="switch">
+      <input type="checkbox" id="themeToggle">
+      <span class="slider round"></span>
     </label>
   </div>
 
   <div class="container">
     <h2>محاسبه‌گر تایم خروج از شرکت</h2>
-
     <div class="input-group">
       <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
-      <div class="input-wrapper">
-        <input type="number" id="minuteInput" placeholder="دقیقه">
-        <input type="number" id="hourInput" placeholder="ساعت">
-      </div>
+      <input type="number" id="minuteInput" placeholder="دقیقه">
+      <input type="number" id="hourInput" placeholder="ساعت">
     </div>
-
     <button onclick="calculateTime()">محاسبه</button>
-
     <div id="result">
       <span>:ساعتی که می‌تونی بری</span>
       <br>
       <span id="calculatedTime"></span>
     </div>
-
     <div class="powered-by">Powered by Mason</div>
   </div>
 
   <script>
+    // دارک مود
+    document.getElementById('themeToggle').addEventListener('change', function () {
+      document.body.classList.toggle('dark-mode', this.checked);
+    });
+
     function calculateTime() {
       let hour = parseInt(document.getElementById('hourInput').value);
       let minute = parseInt(document.getElementById('minuteInput').value);
@@ -55,10 +56,7 @@
         let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
         let finalHour = Math.floor(baseMinutes / 60) % 24;
         let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `
-          ${pad(finalHour)}:${pad(finalMinute)}
-          <span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>
-        `;
+        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}<br><span class="message message-early">تو که هنوز آفتاب نزده اومدی 😮</span>`;
       } else if (totalInputMinutes <= workStartLimit) {
         let totalMinutes = totalInputMinutes + 8 * 60 + 45;
         let finalHour = Math.floor(totalMinutes / 60) % 24;
@@ -75,7 +73,9 @@
 
         calculatedTime.innerHTML = `
           17:45
+          <br>
           <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه 😉</span>
+          <br>
           <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
         `;
       }
@@ -84,11 +84,6 @@
         resultBox.classList.add('show');
       }, 10);
     }
-
-    // دارک مود
-    document.getElementById('darkModeToggle').addEventListener('change', function() {
-      document.body.classList.toggle('dark-mode', this.checked);
-    });
   </script>
 </body>
 </html>
