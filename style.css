@@ -13,6 +13,7 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
+  direction: rtl;
 }
 
 .container {
@@ -34,6 +35,11 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
 }
 
 input {
@@ -74,7 +80,6 @@ button:hover {
   color: #1B75BC;
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
-  display: block;
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.4s ease;
@@ -89,27 +94,81 @@ button:hover {
   transform: translateY(0);
 }
 
-.powered-by {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.9rem;
-  color: #555;
-  font-weight: bold;
-  opacity: 0.7;
+/* ✅ پیام‌های رنگی مخصوص خروجی */
+#calculatedTime .message {
+  display: block;
+  font-size: 1rem;
+  margin-top: 8px;
+  font-weight: normal;
 }
 
-/* ð± Ø±ÛØ³Ù¾Ø§ÙØ³ÛÙ Ø¨Ø±Ø§Û ÙÙØ¨Ø§ÛÙ */
+#calculatedTime .message-early {
+  color: #28a745;
+}
+
+#calculatedTime .message-late-info {
+  color: #ff9800;
+}
+
+#calculatedTime .message-leave-warning {
+  color: #f44336;
+  font-weight: bold;
+}
+
+/* 🔘 دکمه دارک مود */
+.theme-toggle {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  z-index: 10;
+}
+
+.theme-toggle input {
+  margin-left: 8px;
+}
+
+/* 🌙 حالت دارک مود */
+body.dark-mode {
+  background: #1e1e1e;
+  color: #eee;
+}
+
+body.dark-mode .container {
+  background: #2c2c2c;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode input,
+body.dark-mode button {
+  border-color: #666;
+  background-color: #444;
+  color: #eee;
+}
+
+body.dark-mode #result {
+  background-color: #333;
+  color: #81d4fa;
+}
+
+body.dark-mode .powered-by {
+  color: #aaa;
+}
+
+/* 📱 ریسپانسیو برای موبایل */
 @media (max-width: 420px) {
   .container {
     width: 90%;
     padding: 1.5rem;
+    min-height: 0;
   }
 
   input,
   button {
     width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   #result {
