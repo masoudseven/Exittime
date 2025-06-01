@@ -15,6 +15,7 @@ body {
   margin: 0;
   direction: rtl;
   position: relative;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .container {
@@ -29,6 +30,7 @@ body {
   opacity: 0;
   transform: scale(0.95);
   animation: fadeInScale 0.6s ease forwards;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 @keyframes fadeInScale {
@@ -67,6 +69,7 @@ input {
   border: 1px solid #ccc;
   text-align: center;
   box-sizing: border-box;
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 button {
@@ -98,7 +101,7 @@ button:hover {
   border-radius: 30px;
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.4s ease;
+  transition: opacity 0.5s ease, transform 0.4s ease, background-color 0.4s ease, color 0.4s ease;
   font-weight: bold;
   width: fit-content;
   margin-left: auto;
@@ -166,14 +169,19 @@ body.dark-mode .container {
 
 body.dark-mode input,
 body.dark-mode button {
-  border-color: #666;
-  background-color: #444;
-  color: #eee;
+  border-color: #4CAF50;
+  background-color: transparent;
+  color: #4CAF50;
+}
+
+body.dark-mode button:hover {
+  background-color: #4CAF50;
+  color: white;
 }
 
 body.dark-mode #result {
   background-color: #333;
-  color: #81d4fa;
+  color: #b3e5fc;
 }
 
 body.dark-mode .powered-by {
