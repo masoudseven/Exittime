@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Estedad';
-  src: url('Estedad-Regular.woff2') format('woff2');
+  font-family: "Estedad";
+  src: url("Estedad-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'Estedad', sans-serif;
+  font-family: "Estedad", sans-serif;
   background: #eef2f3;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
   width: 380px;
-  min-height: 480px;
+  min-height: 520px; /* بیشتر کردیم */
   position: relative;
   opacity: 0;
   transform: scale(0.95);
@@ -41,7 +41,6 @@ body {
 h2 {
   color: #333;
   margin-bottom: 1.5rem;
-  transition: color 0.3s ease;
 }
 
 .input-group {
@@ -77,8 +76,8 @@ button {
   font-size: 1.2rem;
   border-radius: 30px;
   background-color: transparent;
-  color: #4CAF50;
-  border: 2px solid #4CAF50;
+  color: #4caf50;
+  border: 2px solid #4caf50;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -86,15 +85,34 @@ button {
 }
 
 button:hover {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
+}
+
+#errorBox {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 0.7rem 1.2rem;
+  border-radius: 30px;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  font-weight: bold;
+  transition: all 0.4s ease;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  display: none;
+}
+
+#errorBox.show {
+  display: block;
 }
 
 #result {
   margin-top: 1.5rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
-  color: #1B75BC;
+  color: #1b75bc;
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
   opacity: 0;
@@ -173,12 +191,12 @@ body.dark-mode button {
 }
 
 body.dark-mode button {
-  border-color: #4CAF50;
-  color: #4CAF50;
+  color: #4caf50; /* سبز مثل لایت مود */
+  border-color: #4caf50;
 }
 
 body.dark-mode button:hover {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -187,40 +205,13 @@ body.dark-mode #result {
   color: #81d4fa;
 }
 
-body.dark-mode h2 {
-  color: #fff;
+body.dark-mode #errorBox {
+  background-color: #5f2121;
+  color: #ffbaba;
 }
 
 body.dark-mode .powered-by {
   color: #aaa;
-}
-
-.error-box {
-  margin-top: 1rem;
-  background-color: #ffebee;
-  color: #d32f2f;
-  border: 1px solid #ffcdd2;
-  padding: 0.8rem 1.2rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.4s ease;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.error-box.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-body.dark-mode .error-box {
-  background-color: #3b1c1c;
-  color: #ff8a80;
-  border-color: #c62828;
 }
 
 /* 📱 ریسپانسیو */
