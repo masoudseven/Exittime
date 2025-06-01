@@ -44,11 +44,9 @@
       const resultBox = document.getElementById("result");
       const calculatedTime = document.getElementById("calculatedTime");
 
-      // پاک کردن نتیجه قبلی
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
-      // اعتبارسنجی ورودی
       if (
         isNaN(hour) ||
         isNaN(minute) ||
@@ -63,7 +61,6 @@
         return;
       }
 
-      // ورودی درسته → ارور رو پاک کن
       errorBox.classList.remove("show");
       errorBox.textContent = "";
 
@@ -106,7 +103,6 @@
       }, 10);
     }
 
-    // دارک مود
     document
       .getElementById("darkModeToggle")
       .addEventListener("change", function () {
