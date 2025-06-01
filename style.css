@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Estedad";
-  src: url("Estedad-Regular.woff2") format("woff2");
+  font-family: 'Estedad';
+  src: url('Estedad-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: "Estedad", sans-serif;
+  font-family: 'Estedad', sans-serif;
   background: #eef2f3;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
   width: 380px;
-  min-height: 520px; /* بیشتر کردیم */
+  min-height: 480px;
   position: relative;
   opacity: 0;
   transform: scale(0.95);
@@ -76,8 +76,8 @@ button {
   font-size: 1.2rem;
   border-radius: 30px;
   background-color: transparent;
-  color: #4caf50;
-  border: 2px solid #4caf50;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -85,34 +85,15 @@ button {
 }
 
 button:hover {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
-}
-
-#errorBox {
-  background-color: #ffebee;
-  color: #c62828;
-  padding: 0.7rem 1.2rem;
-  border-radius: 30px;
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  font-weight: bold;
-  transition: all 0.4s ease;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  display: none;
-}
-
-#errorBox.show {
-  display: block;
 }
 
 #result {
   margin-top: 1.5rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
-  color: #1b75bc;
+  color: #1B75BC;
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
   opacity: 0;
@@ -190,24 +171,14 @@ body.dark-mode button {
   color: #eee;
 }
 
-body.dark-mode button {
-  color: #4caf50; /* سبز مثل لایت مود */
-  border-color: #4caf50;
-}
-
-body.dark-mode button:hover {
-  background-color: #4caf50;
-  color: white;
-}
-
 body.dark-mode #result {
   background-color: #333;
-  color: #9ad1f7;
+  color: #a0d8ff;
 }
 
-body.dark-mode #errorBox {
-  background-color: #5f2121;
-  color: #ffbaba;
+/* این قسمت اضافه شده برای روشن‌تر شدن تیتر در دارک مود */
+body.dark-mode h2 {
+  color: #eee;
 }
 
 body.dark-mode .powered-by {
