@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Estedad";
-  src: url("Estedad-Regular.woff2") format("woff2");
+  font-family: 'Estedad';
+  src: url('Estedad-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: "Estedad", sans-serif;
+  font-family: 'Estedad', sans-serif;
   background: #eef2f3;
   display: flex;
   align-items: center;
@@ -14,13 +14,7 @@ body {
   height: 100vh;
   margin: 0;
   direction: rtl;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  position: relative; /* برای جایگذاری توگل بیرون */
-}
-
-.dark-mode {
-  background-color: #1a1a1a;
-  color: #ddd;
+  position: relative;
 }
 
 .container {
@@ -35,14 +29,6 @@ body {
   opacity: 0;
   transform: scale(0.95);
   animation: fadeInScale 0.6s ease forwards;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  /* توگل بیرون مستطیل */
-  margin-top: 40px; /* جا برای توگل بالا */
-}
-
-.dark-mode .container {
-  background-color: #2a2a2a;
-  color: #eee;
 }
 
 @keyframes fadeInScale {
@@ -52,132 +38,35 @@ body {
   }
 }
 
-/* دکمه سوییچ دارک مود - کوچکتر و بیرون از کانتینر */
-.dark-mode-toggle {
-  position: absolute;
-  top: 5px;
-  right: calc(50% - 190px); /* چون کانتینر 380px عرض داره، نصفش 190 */
-  width: 60px; /* کوچکتر */
-  height: 30px; /* کوچکتر */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  user-select: none;
-  z-index: 10;
-}
-
-.dark-mode-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-
-.dark-mode-toggle .slider {
-  width: 52px; /* کوچکتر */
-  height: 26px; /* کوچکتر */
-  background-color: #ccc;
-  border-radius: 30px;
-  position: relative;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 8px;
-  box-sizing: border-box;
-  font-size: 18px; /* کوچکتر */
-  color: #777;
-}
-
-.dark-mode-toggle .icon-sun,
-.dark-mode-toggle .icon-moon {
-  pointer-events: none;
-  user-select: none;
-  color: #777;
-  font-size: 18px; /* کوچکتر */
-}
-
-.dark-mode-toggle input:checked + .slider {
-  background-color: #4caf50;
-}
-
-.dark-mode-toggle input:checked + .slider::before {
-  transform: translateX(26px);
-}
-
-.dark-mode-toggle .slider::before {
-  content: "";
-  position: absolute;
-  height: 22px;
-  width: 22px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-  z-index: 1;
-}
-
-/* وسط چین کردن عنوان */
 h2 {
   color: #333;
   margin-bottom: 1.5rem;
-  text-align: center;
-  transition: color 0.4s ease;
 }
 
-.dark-mode h2 {
-  color: #eee;
-}
-
-/* برچسب ورودی */
-.input-label {
-  display: block;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #444;
-  text-align: center;
-  transition: color 0.4s ease;
-}
-
-.dark-mode .input-label {
-  color: #ddd;
-}
-
-/* گروپ اینپوت ها */
 .input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-label {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrapper {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 1rem;
-}
-
-/* جای ساعت سمت چپ */
-#hourInput {
-  order: 1;
-}
-
-#minuteInput {
-  order: 2;
 }
 
 input {
   width: 140px;
   padding: 0.8rem 1.5rem;
   font-size: 1.2rem;
-  margin: 5px;
   border-radius: 30px;
   border: 1px solid #ccc;
   text-align: center;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.dark-mode input {
-  background-color: #444;
-  color: #eee;
-  border-color: #666;
 }
 
 button {
@@ -187,8 +76,8 @@ button {
   font-size: 1.2rem;
   border-radius: 30px;
   background-color: transparent;
-  color: #4caf50;
-  border: 2px solid #4caf50;
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -196,25 +85,15 @@ button {
 }
 
 button:hover {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
-}
-
-.dark-mode button {
-  color: #90ee90;
-  border-color: #90ee90;
-}
-
-.dark-mode button:hover {
-  background-color: #90ee90;
-  color: #222;
 }
 
 #result {
   margin-top: 1.5rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
-  color: #1b75bc;
+  color: #1B75BC;
   padding: 0.8rem 1.5rem;
   border-radius: 30px;
   opacity: 0;
@@ -224,11 +103,6 @@ button:hover {
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
-}
-
-.dark-mode #result {
-  background-color: #333;
-  color: #a0c8ff;
 }
 
 #result.show {
@@ -265,14 +139,48 @@ button:hover {
   color: #555;
   font-weight: bold;
   opacity: 0.7;
-  transition: color 0.4s ease;
 }
 
-.dark-mode .powered-by {
-  color: #bbb;
+.theme-toggle {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  z-index: 10;
 }
 
-/* 📱 ریسپانسیو برای موبایل */
+.theme-toggle input {
+  margin-left: 8px;
+}
+
+body.dark-mode {
+  background: #1e1e1e;
+  color: #eee;
+}
+
+body.dark-mode .container {
+  background: #2c2c2c;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode input,
+body.dark-mode button {
+  border-color: #666;
+  background-color: #444;
+  color: #eee;
+}
+
+body.dark-mode #result {
+  background-color: #333;
+  color: #81d4fa;
+}
+
+body.dark-mode .powered-by {
+  color: #aaa;
+}
+
+/* 📱 ریسپانسیو */
 @media (max-width: 420px) {
   .container {
     width: 90%;
@@ -280,11 +188,14 @@ button:hover {
     min-height: 0;
   }
 
+  .input-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   input,
   button {
     width: 100%;
-    margin-left: 0;
-    margin-right: 0;
   }
 
   #result {
