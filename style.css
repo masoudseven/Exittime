@@ -91,7 +91,7 @@ button:hover {
 
 #result {
   margin-top: 1.5rem;
-  margin-bottom: 1rem; /* فاصله با Powered by */
+  margin-bottom: 1rem;
   font-size: 1.4rem;
   background-color: #f1f1f1;
   color: #1B75BC;
@@ -136,7 +136,7 @@ button:hover {
   background-color: #ffe6e6;
   color: #b00020;
   padding: 0.8rem 1.5rem;
-  border-radius: 30px; /* مثل باکس ریزالت */
+  border-radius: 30px;
   font-weight: bold;
   display: none;
   width: fit-content;
@@ -159,19 +159,21 @@ button:hover {
   opacity: 0.7;
 }
 
-.theme-toggle {
+/* 🔘 دارک مود درون کارت */
+.container .theme-toggle {
   position: absolute;
   top: 15px;
-  right: 20px;
+  left: 15px;
   font-size: 0.9rem;
   color: #333;
   z-index: 10;
 }
 
-.theme-toggle input {
+.container .theme-toggle input {
   margin-left: 8px;
 }
 
+/* 🌙 حالت دارک مود */
 body.dark-mode {
   background: #1e1e1e;
   color: #eee;
@@ -217,7 +219,7 @@ body.dark-mode .powered-by {
   color: #aaa;
 }
 
-/* 📱 Responsive */
+/* 📱 ریسپانسیو */
 @media (max-width: 420px) {
   .container {
     width: 90%;
