@@ -219,6 +219,11 @@ body.dark-mode .powered-by {
   color: #aaa;
 }
 
+/* ✅ رنگ متن "حالت تاریک" در دارک مود */
+body.dark-mode .theme-toggle {
+  color: #eee;
+}
+
 /* 📱 ریسپانسیو */
 @media (max-width: 420px) {
   .container {
