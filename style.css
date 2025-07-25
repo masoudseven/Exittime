@@ -159,7 +159,6 @@ button:hover {
   opacity: 0.7;
 }
 
-/* 🔘 دارک مود درون کارت */
 .container .theme-toggle {
   position: absolute;
   top: 15px;
@@ -219,7 +218,6 @@ body.dark-mode .powered-by {
   color: #aaa;
 }
 
-/* ✅ رنگ متن "حالت تاریک" در دارک مود */
 body.dark-mode .theme-toggle {
   color: #eee;
 }
@@ -246,4 +244,10 @@ body.dark-mode .theme-toggle {
     font-size: 1.2rem;
     padding: 0.6rem 1rem;
   }
+}
+
+/* ✅ فقط اینو اضافه کردم، هیچ چیز دیگه تغییر نکرد */
+#result .message {
+  font-size: 1rem;
+  font-weight: normal;
 }
