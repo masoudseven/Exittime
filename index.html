@@ -168,10 +168,11 @@
         })
         .catch(err => {
           if (err.name === 'AbortError') {
-            // درخواست لغو شده، کاری لازم نیست
+            const statusLine = document.getElementById('timeStatusLine');
+            if (statusLine) statusLine.remove();
             return;
           }
-          // خطاهای دیگه رو می‌تونی اینجا مدیریت کنی
+          // می‌تونی خطاهای دیگه رو اینجا مدیریت کنی
         });
 
       setTimeout(() => {
