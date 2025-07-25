@@ -37,6 +37,8 @@
   </div>
 
   <script>
+    let abortController = null;
+
     function calculateTime() {
       let hour = parseInt(document.getElementById("hourInput").value);
       let minute = parseInt(document.getElementById("minuteInput").value);
@@ -102,7 +104,7 @@
         `;
       }
 
-      // ساخت پیام موقت و گذاشتن داخل خروجی
+      // اضافه کردن پیام در حال بررسی
       const tempLine = document.createElement('span');
       tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
       tempLine.classList.add('message');
@@ -112,8 +114,15 @@
       tempLine.id = 'timeStatusLine';
       document.getElementById('result').appendChild(tempLine);
 
+      // اگر درخواست قبلی در حال اجراست لغوش کن
+      if (abortController) {
+        abortController.abort();
+      }
+      abortController = new AbortController();
+      const signal = abortController.signal;
+
       // گرفتن ساعت تهران و محاسبه مدت باقی‌مانده
-      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran')
+      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran', { signal })
         .then(response => response.json())
         .then(data => {
           const now = new Date(data.datetime);
@@ -156,6 +165,13 @@
           if (statusLine) {
             statusLine.textContent = text;
           }
+        })
+        .catch(err => {
+          if (err.name === 'AbortError') {
+            // درخواست لغو شده، کاری لازم نیست
+            return;
+          }
+          // خطاهای دیگه رو می‌تونی اینجا مدیریت کنی
         });
 
       setTimeout(() => {
