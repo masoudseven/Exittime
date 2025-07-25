@@ -7,7 +7,6 @@
 </head>
 <body>
   <div class="container">
-    <!-- 🔘 سوئیچ دارک مود -->
     <div class="theme-toggle">
       <label>
         <input type="checkbox" id="darkModeToggle" /> حالت تاریک
@@ -98,6 +97,54 @@
           <span class="message message-leave-warning">و باید ${delayStr.trim()} مرخصی بگیری</span>
         `;
       }
+
+      // 🟣 اضافه شده: گرفتن ساعت دقیق تهران و نمایش مقدار باقی‌مانده
+      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran')
+        .then(response => response.json())
+        .then(data => {
+          const now = new Date(data.datetime);
+          const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+          let finalExitMinutes = 0;
+          if (totalInputMinutes < 7 * 60) {
+            finalExitMinutes = 7 * 60 + 8 * 60 + 45;
+          } else if (totalInputMinutes <= 9 * 60) {
+            finalExitMinutes = totalInputMinutes + 8 * 60 + 45;
+          } else {
+            finalExitMinutes = 17 * 60 + 45;
+          }
+
+          let diff = finalExitMinutes - nowTotalMinutes;
+          let text = '';
+
+          if (diff > 0) {
+            const hrs = Math.floor(diff / 60);
+            const mins = diff % 60;
+
+            if (hrs >= 1) {
+              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😘`;
+            } else {
+              text = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
+            }
+          } else {
+            const passed = Math.abs(diff);
+            const hrs = Math.floor(passed / 60);
+            const mins = passed % 60;
+
+            if (hrs >= 1) {
+              text = `✅ وقت رفتنت ${hrs} ساعت و ${mins} دقیقه پیش بوده، چرا هنوز موندی خوشگلم؟ 🤨`;
+            } else {
+              text = `✅ وقت رفتنت ${mins} دقیقه پیش بوده خوشگلم! زود جمع کن برو 😅`;
+            }
+          }
+
+          const line = document.createElement('div');
+          line.textContent = text;
+          line.style.marginTop = '10px';
+          line.style.fontWeight = 'bold';
+          line.style.color = 'hotpink';
+          resultBox.appendChild(line);
+        });
 
       setTimeout(() => {
         resultBox.classList.add("show");
