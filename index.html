@@ -47,6 +47,10 @@
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
+      // پاک کردن پیام قبلی اگه وجود داشته
+      const prevLine = document.getElementById("timeStatusLine");
+      if (prevLine) prevLine.remove();
+
       if (
         isNaN(hour) ||
         isNaN(minute) ||
@@ -98,7 +102,15 @@
         `;
       }
 
-      // 🟣 اضافه شده: گرفتن ساعت دقیق تهران و نمایش مقدار باقی‌مانده
+      // 🟣 نمایش موقتی و محاسبه زمان باقی‌مانده با ساعت دقیق تهران
+      const tempLine = document.createElement('div');
+      tempLine.textContent = '⏳ در حال بررسی زمان دقیق تهران...';
+      tempLine.classList.add('message');
+      tempLine.style.marginTop = '10px';
+      tempLine.style.color = 'hotpink';
+      tempLine.id = 'timeStatusLine';
+      resultBox.appendChild(tempLine);
+
       fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran')
         .then(response => response.json())
         .then(data => {
@@ -122,7 +134,7 @@
             const mins = diff % 60;
 
             if (hrs >= 1) {
-              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم `;
+              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃`;
             } else {
               text = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
             }
@@ -138,12 +150,8 @@
             }
           }
 
-          const line = document.createElement('div');
-          line.textContent = text;
-          line.style.marginTop = '10px';
-          line.style.fontWeight = 'bold';
-          line.style.color = 'hotpink';
-          resultBox.appendChild(line);
+          const statusLine = document.getElementById('timeStatusLine');
+          statusLine.textContent = text;
         });
 
       setTimeout(() => {
