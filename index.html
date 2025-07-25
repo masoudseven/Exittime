@@ -47,7 +47,6 @@
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
-      // حذف پیام قبلی اگه وجود داره
       const prevLine = document.getElementById('timeStatusLine');
       if (prevLine) prevLine.remove();
 
@@ -102,7 +101,6 @@
         `;
       }
 
-      // ساخت پیام موقت و گذاشتن داخل خروجی
       const tempLine = document.createElement('span');
       tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
       tempLine.classList.add('message');
@@ -110,9 +108,8 @@
       tempLine.style.display = 'block';
       tempLine.style.color = 'hotpink';
       tempLine.id = 'timeStatusLine';
-      document.getElementById('calculatedTime').appendChild(tempLine);
+      document.getElementById('result').appendChild(tempLine); // ✅ به result اضافه شده
 
-      // گرفتن ساعت تهران و محاسبه مدت باقی‌مانده
       fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran')
         .then(response => response.json())
         .then(data => {
