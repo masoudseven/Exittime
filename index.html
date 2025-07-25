@@ -47,8 +47,8 @@
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
-      // پاک کردن پیام قبلی اگه وجود داشته
-      const prevLine = document.getElementById("timeStatusLine");
+      // حذف پیام قبلی اگه وجود داره
+      const prevLine = document.getElementById('timeStatusLine');
       if (prevLine) prevLine.remove();
 
       if (
@@ -102,15 +102,17 @@
         `;
       }
 
-      // 🟣 نمایش موقتی و محاسبه زمان باقی‌مانده با ساعت دقیق تهران
-      const tempLine = document.createElement('div');
-      tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
+      // ساخت پیام موقت و گذاشتن داخل خروجی
+      const tempLine = document.createElement('span');
+      tempLine.textContent = '⏳ در حال بررسی زمان دقیق تهران...';
       tempLine.classList.add('message');
       tempLine.style.marginTop = '10px';
+      tempLine.style.display = 'block';
       tempLine.style.color = 'hotpink';
       tempLine.id = 'timeStatusLine';
-      resultBox.appendChild(tempLine);
+      document.getElementById('calculatedTime').appendChild(tempLine);
 
+      // گرفتن ساعت تهران و محاسبه مدت باقی‌مانده
       fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran')
         .then(response => response.json())
         .then(data => {
@@ -134,7 +136,7 @@
             const mins = diff % 60;
 
             if (hrs >= 1) {
-              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃`;
+              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😘`;
             } else {
               text = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
             }
@@ -150,8 +152,7 @@
             }
           }
 
-          const statusLine = document.getElementById('timeStatusLine');
-          statusLine.textContent = text;
+          document.getElementById('timeStatusLine').textContent = text;
         });
 
       setTimeout(() => {
