@@ -49,9 +49,11 @@
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
-      // حذف پیام قبلی اگه وجود داره
       const prevLine = document.getElementById('timeStatusLine');
       if (prevLine) prevLine.remove();
+
+      const prevWarn = document.getElementById('timeWarningLine');
+      if (prevWarn) prevWarn.remove();
 
       if (
         isNaN(hour) ||
@@ -104,7 +106,6 @@
         `;
       }
 
-      // اضافه کردن پیام در حال بررسی
       const tempLine = document.createElement('span');
       tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
       tempLine.classList.add('message');
@@ -114,7 +115,6 @@
       tempLine.id = 'timeStatusLine';
       document.getElementById('result').appendChild(tempLine);
 
-      // اگر درخواست قبلی در حال اجراست لغوش کن
       if (abortController) {
         abortController.abort();
       }
@@ -159,7 +159,7 @@
           }
         }
 
-        // بررسی اختلاف ساعت با سیستم
+        // فقط وقتی اختلاف زمان زیاد بود پیام بده
         if (globalNow) {
           const localNow = new Date();
           const deltaSeconds = Math.abs((globalNow.getTime() - localNow.getTime()) / 1000);
@@ -168,12 +168,12 @@
             warn.textContent = "⏰ ساعت سیستمت تنظیم نیستا عزیزم، چکش کن 😉";
             warn.style.color = 'orange';
             warn.style.marginTop = '8px';
+            warn.id = 'timeWarningLine';
             document.getElementById('result').appendChild(warn);
           }
         }
       };
 
-      // حالت ترکیبی: استفاده از Promise.race برای سوییچ بین API و local
       fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran', { signal })
         .then(response => response.json())
         .then(data => {
@@ -186,7 +186,6 @@
           useLocalTime();
         });
 
-      // اگر بیشتر از 1 ثانیه طول کشید سوییچ به لوکال
       setTimeout(() => {
         if (!abortController.signal.aborted) {
           abortController.abort();
