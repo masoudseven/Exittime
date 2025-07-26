@@ -37,8 +37,6 @@
   </div>
 
   <script>
-    let abortController = null;
-
     function calculateTime() {
       let hour = parseInt(document.getElementById("hourInput").value);
       let minute = parseInt(document.getElementById("minuteInput").value);
@@ -49,20 +47,15 @@
       resultBox.classList.remove("show");
       calculatedTime.innerHTML = "";
 
-      // حذف پیام قبلی اگه وجود داره
       const prevLine = document.getElementById('timeStatusLine');
       if (prevLine) prevLine.remove();
 
       if (
-        isNaN(hour) ||
-        isNaN(minute) ||
-        hour < 0 ||
-        hour > 23 ||
-        minute < 0 ||
-        minute > 59
+        isNaN(hour) || isNaN(minute) ||
+        hour < 0 || hour > 23 ||
+        minute < 0 || minute > 59
       ) {
-        errorBox.textContent =
-          "یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه";
+        errorBox.textContent = "یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه";
         errorBox.classList.add("show");
         return;
       }
@@ -70,33 +63,27 @@
       errorBox.classList.remove("show");
       errorBox.textContent = "";
 
-      let totalInputMinutes = hour * 60 + minute;
-      let workStartLimit = 9 * 60;
-      let earlyBirdLimit = 7 * 60;
+      const totalInputMinutes = hour * 60 + minute;
       const pad = (n) => n.toString().padStart(2, "0");
+      let finalExitMinutes = 0;
 
-      if (totalInputMinutes < earlyBirdLimit) {
-        let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
-        let finalHour = Math.floor(baseMinutes / 60) % 24;
-        let finalMinute = baseMinutes % 60;
+      if (totalInputMinutes < 7 * 60) {
+        finalExitMinutes = 7 * 60 + 8 * 60 + 45;
         calculatedTime.innerHTML = `
-          ${pad(finalHour)}:${pad(finalMinute)}
+          ${pad(Math.floor(finalExitMinutes / 60))}:${pad(finalExitMinutes % 60)}
           <span class="message message-early">تو که هنوز آفتاب نزده اومدی😨 </span>
         `;
-      } else if (totalInputMinutes <= workStartLimit) {
-        let totalMinutes = totalInputMinutes + 8 * 60 + 45;
-        let finalHour = Math.floor(totalMinutes / 60) % 24;
-        let finalMinute = totalMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
+      } else if (totalInputMinutes <= 9 * 60) {
+        finalExitMinutes = totalInputMinutes + 8 * 60 + 45;
+        calculatedTime.innerHTML = `
+          ${pad(Math.floor(finalExitMinutes / 60))}:${pad(finalExitMinutes % 60)}
+        `;
       } else {
-        let delayMinutes = totalInputMinutes - workStartLimit;
-        let delayHourPart = Math.floor(delayMinutes / 60);
-        let delayMinutePart = delayMinutes % 60;
-
+        finalExitMinutes = 17 * 60 + 45;
+        const delay = totalInputMinutes - 9 * 60;
         let delayStr = "";
-        if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
-        if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
-
+        if (delay >= 60) delayStr += `${Math.floor(delay / 60)} ساعت `;
+        if (delay % 60 > 0) delayStr += `${delay % 60} دقیقه `;
         calculatedTime.innerHTML = `
           17:45
           <span class="message message-late-info">یه کوچولو دیر اومدی ولی اوکیه😉 </span>
@@ -104,76 +91,55 @@
         `;
       }
 
-      // اضافه کردن پیام در حال بررسی
       const tempLine = document.createElement('span');
-      tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
+      tempLine.id = 'timeStatusLine';
       tempLine.classList.add('message');
       tempLine.style.marginTop = '10px';
       tempLine.style.display = 'block';
       tempLine.style.color = 'hotpink';
-      tempLine.id = 'timeStatusLine';
+      tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
       document.getElementById('result').appendChild(tempLine);
 
-      // اگر درخواست قبلی در حال اجراست لغوش کن
-      if (abortController) {
-        abortController.abort();
-      }
-      abortController = new AbortController();
-      const signal = abortController.signal;
+      const useLocalTime = () => {
+        const now = new Date();
+        handleTimeResult(now);
+      };
 
-      // گرفتن ساعت تهران و محاسبه مدت باقی‌مانده
-      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran', { signal })
-        .then(response => response.json())
-        .then(data => {
-          const now = new Date(data.datetime);
-          const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
+      const handleTimeResult = (now) => {
+        const nowMinutes = now.getHours() * 60 + now.getMinutes();
+        const diff = finalExitMinutes - nowMinutes;
 
-          let finalExitMinutes = 0;
-          if (totalInputMinutes < 7 * 60) {
-            finalExitMinutes = 7 * 60 + 8 * 60 + 45;
-          } else if (totalInputMinutes <= 9 * 60) {
-            finalExitMinutes = totalInputMinutes + 8 * 60 + 45;
-          } else {
-            finalExitMinutes = 17 * 60 + 45;
-          }
+        if (diff > 0) {
+          const h = Math.floor(diff / 60);
+          const m = diff % 60;
+          tempLine.textContent = h >= 1 ?
+            `⏳ ${h} ساعت و ${m} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃` :
+            `⏳ فقط ${m} دقیقه دیگه مونده تا بری خوشگلم 😎`;
+        } else {
+          const passed = Math.abs(diff);
+          const h = Math.floor(passed / 60);
+          const m = passed % 60;
+          tempLine.textContent = h >= 1 ?
+            `✅ وقت رفتنت ${h} ساعت و ${m} دقیقه پیش بوده، چرا هنوز موندی خوشگلم؟ 🤨` :
+            `✅ وقت رفتنت ${m} دقیقه پیش بوده خوشگلم! زود جمع کن برو 😅`;
+        }
+      };
 
-          let diff = finalExitMinutes - nowTotalMinutes;
-          let text = '';
-
-          if (diff > 0) {
-            const hrs = Math.floor(diff / 60);
-            const mins = diff % 60;
-
-            if (hrs >= 1) {
-              text = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃`;
-            } else {
-              text = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
-            }
-          } else {
-            const passed = Math.abs(diff);
-            const hrs = Math.floor(passed / 60);
-            const mins = passed % 60;
-
-            if (hrs >= 1) {
-              text = `✅ وقت رفتنت ${hrs} ساعت و ${mins} دقیقه پیش بوده، چرا هنوز موندی خوشگلم؟ 🤨`;
-            } else {
-              text = `✅ وقت رفتنت ${mins} دقیقه پیش بوده خوشگلم! زود جمع کن برو 😅`;
-            }
-          }
-
-          const statusLine = document.getElementById('timeStatusLine');
-          if (statusLine) {
-            statusLine.textContent = text;
-          }
-        })
-        .catch(err => {
-          if (err.name === 'AbortError') {
-            const statusLine = document.getElementById('timeStatusLine');
-            if (statusLine) statusLine.remove();
-            return;
-          }
-          // می‌تونی خطاهای دیگه رو اینجا مدیریت کنی
-        });
+      // حالت ترکیبی: تلاش برای گرفتن ساعت از API، اگر بیش از ۱ ثانیه طول کشید از لوکال
+      Promise.race([
+        fetch("https://worldtimeapi.org/api/timezone/Asia/Tehran")
+          .then((res) => res.json())
+          .then((data) => new Date(data.datetime)),
+        new Promise((resolve) => setTimeout(() => resolve("fallback"), 1000)),
+      ]).then((result) => {
+        if (result === "fallback") {
+          useLocalTime();
+        } else {
+          handleTimeResult(result);
+        }
+      }).catch(() => {
+        useLocalTime();
+      });
 
       setTimeout(() => {
         resultBox.classList.add("show");
