@@ -174,7 +174,7 @@
         }
       };
 
-      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran', { signal })
+      fetch('https://worker.masoudseven7dial.workers.dev/', { signal })
         .then(response => response.json())
         .then(data => {
           if (abortController.signal.aborted) return;
