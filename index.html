@@ -55,9 +55,6 @@
       const prevWarn = document.getElementById('timeWarningLine');
       if (prevWarn) prevWarn.remove();
 
-      const prevRamadan = document.getElementById('ramadanLine');
-      if (prevRamadan) prevRamadan.remove();
-
       if (
         isNaN(hour) ||
         isNaN(minute) ||
@@ -80,23 +77,20 @@
       let earlyBirdLimit = 7 * 60;
       const pad = (n) => n.toString().padStart(2, "0");
 
-      let finalExitMinutes; // برای استفاده در بخش رمضان
-
       if (totalInputMinutes < earlyBirdLimit) {
-        finalExitMinutes = earlyBirdLimit + 8 * 60 + 45;
-        let finalHour = Math.floor(finalExitMinutes / 60) % 24;
-        let finalMinute = finalExitMinutes % 60;
+        let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
+        let finalHour = Math.floor(baseMinutes / 60) % 24;
+        let finalMinute = baseMinutes % 60;
         calculatedTime.innerHTML = `
           ${pad(finalHour)}:${pad(finalMinute)}
           <span class="message message-early">تو که هنوز آفتاب نزده اومدی😨 </span>
         `;
       } else if (totalInputMinutes <= workStartLimit) {
-        finalExitMinutes = totalInputMinutes + 8 * 60 + 45;
-        let finalHour = Math.floor(finalExitMinutes / 60) % 24;
-        let finalMinute = finalExitMinutes % 60;
+        let totalMinutes = totalInputMinutes + 8 * 60 + 45;
+        let finalHour = Math.floor(totalMinutes / 60) % 24;
+        let finalMinute = totalMinutes % 60;
         calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
       } else {
-        finalExitMinutes = 17 * 60 + 45;
         let delayMinutes = totalInputMinutes - workStartLimit;
         let delayHourPart = Math.floor(delayMinutes / 60);
         let delayMinutePart = delayMinutes % 60;
@@ -112,23 +106,6 @@
         `;
       }
 
-      // --- اضافه کردن بخش ماه رمضان ---
-      let ramadanMinutes = finalExitMinutes - 90;
-      let ramadanHour = Math.floor(ramadanMinutes / 60) % 24;
-      let ramadanMin = ramadanMinutes % 60;
-
-      const ramadanLine = document.createElement('div');
-      ramadanLine.id = 'ramadanLine';
-      ramadanLine.style.marginTop = '10px';
-      ramadanLine.style.paddingTop = '10px';
-      ramadanLine.style.borderTop = '1px dashed #ccc';
-      ramadanLine.innerHTML = `
-        <span style="font-size: 0.85rem; color: #666; display: block;">🌙 ولی چون ماه رمضونه:</span>
-        <span style="color: #E91E63; font-weight: bold; font-size: 1.2rem;">ساعت ${pad(ramadanHour)}:${pad(ramadanMin)} میتونی بری به راز  و نیازات برسی! 📿🤲🏻</span>
-      `;
-      resultBox.appendChild(ramadanLine);
-      // -------------------------------
-
       const tempLine = document.createElement('span');
       tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
       tempLine.classList.add('message');
@@ -136,7 +113,7 @@
       tempLine.style.display = 'block';
       tempLine.style.color = 'hotpink';
       tempLine.id = 'timeStatusLine';
-      resultBox.appendChild(tempLine);
+      document.getElementById('result').appendChild(tempLine);
 
       if (abortController) {
         abortController.abort();
@@ -151,11 +128,20 @@
 
       const handleTimeResult = (now, globalNow) => {
         const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
-        let diff = ramadanMinutes - nowTotalMinutes; // محاسبه بر اساس تایم رمضان
+        let diff = 0;
+
+        if (totalInputMinutes < earlyBirdLimit) {
+          diff = (earlyBirdLimit + 8 * 60 + 45) - nowTotalMinutes;
+        } else if (totalInputMinutes <= workStartLimit) {
+          diff = (totalInputMinutes + 8 * 60 + 45) - nowTotalMinutes;
+        } else {
+          diff = (17 * 60 + 45) - nowTotalMinutes;
+        }
 
         if (diff > 0) {
           const hrs = Math.floor(diff / 60);
           const mins = diff % 60;
+
           if (hrs >= 1) {
             tempLine.textContent = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃`;
           } else {
@@ -165,6 +151,7 @@
           const passed = Math.abs(diff);
           const hrs = Math.floor(passed / 60);
           const mins = passed % 60;
+
           if (hrs >= 1) {
             tempLine.textContent = `✅ وقت رفتنت ${hrs} ساعت و ${mins} دقیقه پیش بوده، چرا هنوز موندی خوشگلم؟ 🤨`;
           } else {
@@ -172,6 +159,7 @@
           }
         }
 
+        // فقط وقتی اختلاف زمان زیاد بود پیام بده
         if (globalNow) {
           const localNow = new Date();
           const deltaSeconds = Math.abs((globalNow.getTime() - localNow.getTime()) / 1000);
@@ -181,7 +169,7 @@
             warn.style.color = 'orange';
             warn.style.marginTop = '8px';
             warn.id = 'timeWarningLine';
-            resultBox.appendChild(warn);
+            document.getElementById('result').appendChild(warn);
           }
         }
       };
