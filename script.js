@@ -1,13 +1,21 @@
-// ۱. مدیریت ویجت تقویم و آب و هوا
-document.addEventListener("DOMContentLoaded", () => {
-    // تقویم محلی سیستم به شمسی
+// ۱. مدیریت ویجت تقویم و آب و هوای زنده تهران
+document.addEventListener("DOMContentLoaded", async () => {
+    // تنظیم تقویم محلی سیستم به شمسی
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', options);
     
-    // شبیه‌سازی هوای زمان خروج
-    const weatherConditions = ["آفتابی و معتدل ☀️", "کمی ابری همراه با نسیم ⛅", "احتمال بارش پراکنده 🌧️", "هوای عالی برای پیاده‌روی 🍁"];
-    const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
-    document.getElementById("weatherBox").innerText = "🌡️ خروج: " + randomWeather;
+    // دریافت مستقیم دمای لحظه‌ای تهران با مختصات دقیق (35.6892 , 51.3890)
+    try {
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
+        const data = await response.json();
+        const temp = Math.round(data.current_weather.temperature);
+        
+        // نمایش مستقیم دمای تهران در سایت
+        document.getElementById("weatherBox").innerText = `🌡️ دمای تهران: ${temp}°C`;
+    } catch (error) {
+        // در صورت بروز خطای شبکه یا API
+        document.getElementById("weatherBox").innerText = "☀️ تهران: در حال به‌روزرسانی...";
+    }
 });
 
 // ۲. محاسبه ساعت خروج و راه اندازی تایمر
@@ -133,7 +141,7 @@ function snitchMove() {
     document.querySelector(`[data-index='${randomIdx}']`).innerText = "O";
 
     if (checkWin(board, "O")) {
-        document.getElementById("tttStatus").innerText = "The Snitch برنده شد! بدو برو سر کارت تا چغلیتو به مدیر نکرده! 跑";
+        document.getElementById("tttStatus").innerText = "The Snitch برنده شد! بدو برو سر کارت تا چغلیتو به مدیر نکرده! 🏃‍♂️💨";
     }
 }
 
