@@ -20,14 +20,14 @@ body {
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
-    line-height: 1.6; /* افزایش فاصله بین خطوط متن */
+    line-height: 1.7; /* فاصله مناسب بین خطوط متن */
 }
 
-/* لبه‌های کاملاً گرد کانتینر اصلی و ایجاد پدینگ بیشتر */
-.main-container {
+/* لبه‌های کاملاً گرد کانتینر اصلی و پدینگ عمودی بیشتر */
+.container {
     background: var(--panel-bg);
     border-radius: 16px;
-    padding: 40px 30px; /* افزایش فاصله داخلی بالا و پایین */
+    padding: 40px 30px; /* افزایش فاصله از بالا و پایین کانتینر */
     width: 100%;
     max-width: 480px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -35,8 +35,8 @@ body {
     text-align: center;
 }
 
-h1 {
-    font-size: 1.5rem;
+h2 {
+    font-size: 1.4rem;
     color: var(--accent);
     margin-top: 10px;
     margin-bottom: 30px; /* افزایش فاصله زیر عنوان */
@@ -61,26 +61,26 @@ h1 {
 }
 
 .input-group {
-    margin-bottom: 30px; /* افزایش فاصله عمودی فیلدها با دکمه */
+    margin-bottom: 30px; /* فاصله عمودی بیشتر با دکمه محاسبه */
 }
 
-.input-group label {
+.input-label {
     display: block;
-    margin-bottom: 15px; /* افزایش فاصله متن راهنما با اینپوت‌ها */
+    margin-bottom: 15px; /* فاصله بیشتر بین متن راهنما و فیلدها */
     font-size: 0.95rem;
     color: var(--text-color);
 }
 
-.time-inputs {
+.input-wrapper {
     display: flex;
     gap: 8px;
     justify-content: center;
     align-items: center;
-    direction: ltr;
+    direction: ltr; /* نمایش ساعت در چپ و دقیقه در راست */
 }
 
 /* لبه‌های گرد فیلدهای ورودی */
-input {
+input[type="number"] {
     width: 110px;
     padding: 12px;
     border-radius: 12px;
@@ -102,6 +102,7 @@ input:focus {
     color: var(--text-muted);
 }
 
+/* استایل عمومی دکمه‌ها با لبه‌های گرد */
 button {
     cursor: pointer;
     border: none;
@@ -109,7 +110,6 @@ button {
     transition: background 0.2s;
 }
 
-/* لبه‌های گرد دکمه اصلی */
 .btn-calc {
     background: var(--primary);
     color: white;
@@ -123,28 +123,48 @@ button {
     background: var(--primary-hover);
 }
 
-/* لبه‌های گرد و پدینگ بیشتر باکس نتایج */
-.result-box {
-    margin-top: 35px; /* افزایش فاصله باکس نتیجه از دکمه */
+/* لبه‌های گرد باکس‌های پیام خطا و نتیجه */
+#errorBox, #result {
+    display: none;
+    margin-top: 30px; /* افزایش فاصله باکس‌ها از هم */
     padding: 20px 15px;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+#errorBox {
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+    color: #a80000;
+}
+
+#result {
     background: #f0f7ff;
     border: 1px solid #cde2ff;
-    border-radius: 12px;
-    display: none;
-}
-
-#exitTimeText {
-    margin: 0;
-    font-size: 1.05rem;
     color: #004b87;
     font-weight: bold;
-    margin-bottom: 12px; /* فاصله بین ساعت خروج و تایمر معکوس */
 }
 
-.countdown {
-    font-size: 1.15rem;
-    font-weight: bold;
+#calculatedTime {
+    display: block;
+    font-size: 1.4rem;
+    margin-top: 10px;
     color: #a80000;
+}
+
+.message {
+    display: block;
+    font-size: 0.95rem;
+    margin-top: 12px; /* افزایش فاصله بین خطوط نتایج داخلی */
+    font-weight: normal;
+}
+
+.message-early { color: #d46b08; }
+.message-late-info { color: #531dab; }
+.message-leave-warning { color: #c41d7f; font-weight: bold; }
+
+#errorBox.show, #result.show {
+    display: block;
 }
 
 /* دکمه فرار و شیت اکسل */
@@ -187,10 +207,10 @@ table { width: 100%; border-collapse: collapse; }
 th, td { border: 1px solid #bbb; padding: 8px; font-size: 13px; }
 th { background: #f3f3f3; }
 
-/* بخش بازی */
+/* بخش بازی مخفی */
 .hidden-zone {
     display: none;
-    margin-top: 40px; /* افزایش فاصله بخش مخفی */
+    margin-top: 40px; /* افزایش فاصله بخش بازی */
     border-top: 1px dashed var(--border-color);
     padding-top: 25px;
 }
@@ -239,12 +259,11 @@ th { background: #f3f3f3; }
 }
 .rps-buttons button:hover { background: #eaeaea; }
 
-/* تنظیمات فوتر بولد شده */
-footer {
-    margin-top: 45px; /* افزایش فاصله فوتر از بقیه اجزا */
-    font-size: 0.8rem;
+/* فوتر شرکتی بولد شده */
+.powered-by {
+    margin-top: 45px; /* افزایش فاصله فوتر از باکس‌ها */
+    font-size: 0.85rem;
     color: var(--text-color);
     cursor: pointer;
     user-select: none;
-    font-weight: bold;
 }
