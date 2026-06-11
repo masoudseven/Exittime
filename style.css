@@ -201,24 +201,6 @@ button {
     display: block;
 }
 
-#excelScreen {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: #ffffff;
-    color: #000000;
-    z-index: 9998;
-    font-family: Arial, sans-serif;
-    text-align: right;
-    direction: rtl;
-}
-
-.excel-toolbar { background: #107c41; color: white; padding: 10px; font-weight: bold; }
-.excel-table-container { padding: 20px; }
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #bbb; padding: 10px; font-size: 13px; border-radius: 4px; }
-th { background: #f3f3f3; }
-
 .hidden-zone {
     display: none;
     margin-top: 40px;
