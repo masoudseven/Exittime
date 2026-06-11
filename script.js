@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ۲. محاسبه ساعت خروج و راه اندازی تایمر (با پیام‌های صمیمی نسخه اول شما)
+// ۲. محاسبه ساعت خروج و راه اندازی تایمر (دقیقاً با متن‌های نسخه اول شما)
 let timerInterval;
 function calculateExit() {
     const hour = parseInt(document.getElementById("entryHour").value);
@@ -38,8 +38,8 @@ function calculateExit() {
 
     const pad = (num) => num.toString().padStart(2, '0');
     
-    // استفاده دقیق از پیام نسخه اول شما
-    document.getElementById("exitTimeText").innerText = `ساعت خروج شما: ${pad(exitHour)}:${pad(exitMinute)} (بدو برو خونه دیگه، اضافه‌کاری پول نمیشه! 😉)`;
+    // بازگرداندن دقیق متن نسخه اول شما
+    document.getElementById("exitTimeText").innerText = `ساعت آزادی شما: ${pad(exitHour)}:${pad(exitMinute)}`;
     document.getElementById("resultBox").style.display = "block";
 
     startCountdown(exitHour, exitMinute);
@@ -56,8 +56,8 @@ function startCountdown(targetHour, targetMinute) {
         const diff = target - now;
 
         if (diff <= 0) {
-            // پیام پایان تایمر نسخه اول شما
-            document.getElementById("countdownTimer").innerText = "تایمت تمومه! سیستم رو خاموش کن و فرار کن! 🎉";
+            // متن نسخه اول شما هنگام پایان زمان کاری
+            document.getElementById("countdownTimer").innerText = "تایمت تمومه! بدو برو که آزادی 🎉";
             clearInterval(timerInterval);
             return;
         }
@@ -67,8 +67,8 @@ function startCountdown(targetHour, targetMinute) {
         const secs = Math.floor((diff % 60000) / 1000);
 
         const pad = (num) => num.toString().padStart(2, '0');
-        // پیام ثانیه‌شمار
-        document.getElementById("countdownTimer").innerText = `زمان باقی‌مانده تا فرار: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        // متن نسخه اول شما برای تایمر معکوس ثانیه‌شمار
+        document.getElementById("countdownTimer").innerText = `زمان باقی‌مانده: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
     }, 1000);
 }
 
@@ -189,10 +189,11 @@ function checkWin(b, player) {
     return winPatterns.some(pattern => pattern.every(idx => b[idx] === player));
 }
 
+// متن ابتدایی بازی دوز نسخه شما
 function resetTicTacToe() {
     board = ["", "", "", "", "", "", "", "", ""];
     cells.forEach(cell => cell.innerText = "");
-    document.getElementById("tttStatus").innerText = "نوبت حرکت شما (X)";
+    document.getElementById("tttStatus").innerText = "نوبت شماست (X)";
 }
 
 // --- بازی سنگ کاغذ قیچی ---
