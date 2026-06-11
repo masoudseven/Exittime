@@ -20,14 +20,14 @@ body {
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
-    line-height: 1.7; /* فاصله مناسب بین خطوط متن */
+    line-height: 1.7;
 }
 
-/* لبه‌های کاملاً گرد کانتینر اصلی و پدینگ عمودی بیشتر */
+/* لبه‌های کاملاً گرد کانتینر اصلی */
 .container {
     background: var(--panel-bg);
     border-radius: 16px;
-    padding: 40px 30px; /* افزایش فاصله از بالا و پایین کانتینر */
+    padding: 40px 30px;
     width: 100%;
     max-width: 480px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -39,17 +39,17 @@ h2 {
     font-size: 1.4rem;
     color: var(--accent);
     margin-top: 10px;
-    margin-bottom: 30px; /* افزایش فاصله زیر عنوان */
+    margin-bottom: 30px;
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 35px; /* افزایش فاصله زیر بخش تاریخ و هوا */
+    margin-bottom: 35px;
     gap: 12px;
 }
 
-/* لبه‌های گرد باکس‌های هدر */
+/* لبه‌های گرد باکس‌های تاریخ و هوا */
 .header-box {
     background: #f8f9fa;
     padding: 12px 10px;
@@ -61,12 +61,12 @@ h2 {
 }
 
 .input-group {
-    margin-bottom: 30px; /* فاصله عمودی بیشتر با دکمه محاسبه */
+    margin-bottom: 30px;
 }
 
 .input-label {
     display: block;
-    margin-bottom: 15px; /* فاصله بیشتر بین متن راهنما و فیلدها */
+    margin-bottom: 15px;
     font-size: 0.95rem;
     color: var(--text-color);
 }
@@ -76,10 +76,10 @@ h2 {
     gap: 8px;
     justify-content: center;
     align-items: center;
-    direction: ltr; /* نمایش ساعت در چپ و دقیقه در راست */
+    direction: ltr;
 }
 
-/* لبه‌های گرد فیلدهای ورودی */
+/* لبه‌های گرد فیلدهای ورودی عدد */
 input[type="number"] {
     width: 110px;
     padding: 12px;
@@ -102,7 +102,7 @@ input:focus {
     color: var(--text-muted);
 }
 
-/* استایل عمومی دکمه‌ها با لبه‌های گرد */
+/* لبه‌های گرد دکمه اصلی */
 button {
     cursor: pointer;
     border: none;
@@ -123,10 +123,10 @@ button {
     background: var(--primary-hover);
 }
 
-/* لبه‌های گرد باکس‌های پیام خطا و نتیجه */
+/* لبه‌های گرد باکس‌های خطا و نتایج */
 #errorBox, #result {
     display: none;
-    margin-top: 30px; /* افزایش فاصله باکس‌ها از هم */
+    margin-top: 30px;
     padding: 20px 15px;
     border-radius: 12px;
     font-size: 1rem;
@@ -155,7 +155,7 @@ button {
 .message {
     display: block;
     font-size: 0.95rem;
-    margin-top: 12px; /* افزایش فاصله بین خطوط نتایج داخلی */
+    margin-top: 12px;
     font-weight: normal;
 }
 
@@ -167,7 +167,7 @@ button {
     display: block;
 }
 
-/* دکمه فرار و شیت اکسل */
+/* لبه‌های گرد دکمه فرار سریع */
 #panicBtn {
     position: fixed;
     top: 15px;
@@ -178,7 +178,7 @@ button {
     padding: 6px 12px;
     font-size: 0.75rem;
     z-index: 9999;
-    border-radius: 8px;
+    border-radius: 12px; /* گرد شدن دکمه فرار */
 }
 #panicBtn:hover { background: #f3f2f1; }
 
@@ -210,58 +210,43 @@ th { background: #f3f3f3; }
 /* بخش بازی مخفی */
 .hidden-zone {
     display: none;
-    margin-top: 40px; /* افزایش فاصله بخش بازی */
+    margin-top: 40px;
     border-top: 1px dashed var(--border-color);
     padding-top: 25px;
 }
 
 .hidden-zone h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 15px; }
 
-.game-selector button {
-    background: #f3f2f1;
-    color: #323130;
-    border: 1px solid #a19f9d;
-    padding: 8px 14px;
-    margin: 5px;
-    font-size: 0.85rem;
-    border-radius: 8px;
-}
-.game-selector button:hover { background: #eaeaea; }
-
 .ttt-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    max-width: 165px;
+    gap: 8px;
+    max-width: 170px;
     margin: 20px auto;
 }
 
+/* لبه‌های کاملاً گرد خانه‌های دوز */
 .cell {
     width: 50px; height: 50px;
     background: #f8f9fa;
     border: 1px solid var(--border-color);
     display: flex; justify-content: center; align-items: center;
     font-size: 1.3rem; font-weight: bold; cursor: pointer;
-    border-radius: 8px;
+    border-radius: 12px; /* گرد شدن خانه ها */
 }
+.cell:hover { background: #eaeaea; }
 
+/* لبه‌های گرد دکمه بازنشانی بازی */
 .btn-reset {
     background: #fff; border: 1px solid var(--border-color);
-    padding: 6px 12px; font-size: 0.8rem; margin-top: 15px;
-    border-radius: 8px;
+    padding: 6px 16px; font-size: 0.85rem; margin-top: 15px;
+    border-radius: 12px; /* گرد شدن دکمه ریست */
 }
+.btn-reset:hover { background: #f4f6f9; }
 
-.rps-buttons { margin-top: 15px; }
-.rps-buttons button { 
-    font-size: 1.1rem; padding: 10px 18px; margin: 5px; 
-    background: #f8f9fa; border: 1px solid var(--border-color); 
-    border-radius: 8px;
-}
-.rps-buttons button:hover { background: #eaeaea; }
-
-/* فوتر شرکتی بولد شده */
+/* فوتر شرکتی بولد */
 .powered-by {
-    margin-top: 45px; /* افزایش فاصله فوتر از باکس‌ها */
+    margin-top: 45px;
     font-size: 0.85rem;
     color: var(--text-color);
     cursor: pointer;
