@@ -22,9 +22,10 @@ body {
     box-sizing: border-box;
 }
 
+/* لبه‌های گرد کانتینر اصلی */
 .main-container {
     background: var(--panel-bg);
-    border-radius: 8px;
+    border-radius: 16px;
     padding: 30px;
     width: 100%;
     max-width: 480px;
@@ -47,10 +48,11 @@ h1 {
     gap: 12px;
 }
 
+/* لبه‌های گرد باکس‌های هدر */
 .header-box {
     background: #f8f9fa;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 12px;
     font-size: 0.85rem;
     color: var(--text-muted);
     flex: 1;
@@ -73,13 +75,14 @@ h1 {
     gap: 8px;
     justify-content: center;
     align-items: center;
-    direction: ltr; /* جهت چپ به راست برای قرارگیری درست ساعت در سمت چپ */
+    direction: ltr;
 }
 
+/* لبه‌های گرد فیلدهای ورودی */
 input {
     width: 110px;
     padding: 10px;
-    border-radius: 4px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
     text-align: center;
     font-size: 1rem;
@@ -101,10 +104,11 @@ input:focus {
 button {
     cursor: pointer;
     border: none;
-    border-radius: 4px;
+    border-radius: 12px;
     transition: background 0.2s;
 }
 
+/* لبه‌های گرد دکمه اصلی */
 .btn-calc {
     background: var(--primary);
     color: white;
@@ -118,12 +122,13 @@ button {
     background: var(--primary-hover);
 }
 
+/* لبه‌های گرد باکس نتایج */
 .result-box {
     margin-top: 25px;
     padding: 15px;
     background: #f0f7ff;
     border: 1px solid #cde2ff;
-    border-radius: 6px;
+    border-radius: 12px;
     display: none;
 }
 
@@ -152,6 +157,7 @@ button {
     padding: 6px 12px;
     font-size: 0.75rem;
     z-index: 9999;
+    border-radius: 8px;
 }
 #panicBtn:hover { background: #f3f2f1; }
 
@@ -197,6 +203,7 @@ th { background: #f3f3f3; }
     padding: 6px 12px;
     margin: 5px;
     font-size: 0.85rem;
+    border-radius: 8px;
 }
 .game-selector button:hover { background: #eaeaea; }
 
@@ -208,26 +215,35 @@ th { background: #f3f3f3; }
     margin: 15px auto;
 }
 
+/* لبه‌های گرد خانه‌های دوز */
 .cell {
     width: 50px; height: 50px;
     background: #f8f9fa;
     border: 1px solid var(--border-color);
     display: flex; justify-content: center; align-items: center;
     font-size: 1.3rem; font-weight: bold; cursor: pointer;
+    border-radius: 8px;
 }
 
 .btn-reset {
     background: #fff; border: 1px solid var(--border-color);
     padding: 5px 10px; font-size: 0.8rem; margin-top: 10px;
+    border-radius: 8px;
 }
 
-.rps-buttons button { font-size: 1.1rem; padding: 8px 15px; margin: 5px; background: #f8f9fa; border: 1px solid var(--border-color); }
+.rps-buttons button { 
+    font-size: 1.1rem; padding: 8px 15px; margin: 5px; 
+    background: #f8f9fa; border: 1px solid var(--border-color); 
+    border-radius: 8px;
+}
 .rps-buttons button:hover { background: #eaeaea; }
 
+/* تنظیمات فوتر بولد شده */
 footer {
     margin-top: 35px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
+    font-size: 0.8rem;
+    color: var(--text-color);
     cursor: pointer;
     user-select: none;
+    font-weight: bold; /* بولد شدن متن پایینی */
 }
