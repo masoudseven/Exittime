@@ -1,96 +1,99 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاسبه ساعت خروج</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExitTime</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <button id="panicBtn" onclick="togglePanic()">مشاهده گزارش خطا 🚨</button>
+  <button id="panicBtn" onclick="togglePanic()">مشاهده گزارش خطا 🚨</button>
 
-    <div id="excelScreen" onclick="togglePanic()">
-        <div class="excel-toolbar">ترازنامه مالی سه‌ماهه اول - Microsoft Excel (Read-Only)</div>
-        <div class="excel-table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>کد کالا</th>
-                        <th>شرح فعالیت</th>
-                        <th>بودجه مصوب (ریال)</th>
-                        <th>هزینه واقعی</th>
-                        <th>انحراف از بودجه</th>
-                        <th>وضعیت عملکرد</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>A-1024</td><td>بهینه‌سازی لود سرورهای مرکزی</td><td>4,500,000,000</td><td>4,250,000,000</td><td>-5.5%</td><td style="color: green;">مطلوب</td></tr>
-                    <tr><td>A-1025</td><td>توسعه فرانت‌اند پنل مدیریت</td><td>1,200,000,000</td><td>1,450,000,000</td><td>+20.8%</td><td style="color: red;">نیازمند بررسی</td></tr>
-                    <tr><td>A-1026</td><td>بازاریابی دیجیتال و SEO</td><td>3,100,000,000</td><td>2,900,000,000</td><td>-6.4%</td><td style="color: green;">مطلوب</td></tr>
-                    <tr><td>A-1027</td><td>امنیت شبکه و تست نفوذ</td><td>2,000,000,000</td><td>2,000,000,000</td><td>0%</td><td>پایدار</td></tr>
-                </tbody>
-            </table>
-        </div>
+  <div id="excelScreen" onclick="togglePanic()">
+    <div class="excel-toolbar">ترازنامه مالی سه‌ماهه اول - Microsoft Excel (Read-Only)</div>
+    <div class="excel-table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>کد کالا</th>
+            <th>شرح فعالیت</th>
+            <th>بودجه مصوب (ریال)</th>
+            <th>هزینه واقعی</th>
+            <th>انحراف از بودجه</th>
+            <th>وضعیت عملکرد</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>A-1024</td><td>بهینه‌سازی لود سرورهای مرکزی</td><td>4,500,000,000</td><td>4,250,000,000</td><td>-5.5%</td><td style="color: green;">مطلوب</td></tr>
+          <tr><td>A-1025</td><td>توسعه فرانت‌اند پنل مدیریت</td><td>1,200,000,000</td><td>1,450,000,000</td><td>+20.8%</td><td style="color: red;">نیازمند بررسی</td></tr>
+          <tr><td>A-1026</td><td>بازاریابی دیجیتال و SEO</td><td>3,100,000,000</td><td>2,900,000,000</td><td>-6.4%</td><td style="color: green;">مطلوب</td></tr>
+          <tr><td>A-1027</td><td>امنیت شبکه و تست نفوذ</td><td>2,000,000,000</td><td>2,000,000,000</td><td>0%</td><td>پایدار</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="container" id="mainDashboard">
+    
+    <div class="dashboard-header">
+      <div class="header-box" id="calendarBox">📅 در حال بارگذاری تاریخ...</div>
+      <div class="header-box" id="weatherBox">☀️ دریافت وضعیت هوا...</div>
     </div>
 
-    <div class="main-container" id="mainDashboard">
-        
-        <div class="dashboard-header">
-            <div class="header-box" id="calendarBox">📅 در حال بارگذاری تاریخ...</div>
-            <div class="header-box" id="weatherBox">☀️ دریافت وضعیت هوا...</div>
-        </div>
+    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
 
-        <h1>محاسبه ساعت خروج کارمندان</h1>
-        
-        <div class="input-group">
-            <label>زمان ورود به شرکت را وارد کنید:</label>
-            <div class="time-inputs">
-                <input type="number" id="entryMinute" placeholder="دقیقه (مثلا 30)" min="0" max="59">
-                <span class="time-separator">:</span>
-                <input type="number" id="entryHour" placeholder="ساعت (مثلا 8)" min="0" max="23">
-            </div>
-        </div>
-
-        <button class="btn-calc" onclick="calculateExit()">محاسبه ساعت خروج</button>
-
-        <div id="resultBox" class="result-box">
-            <p id="exitTimeText"></p>
-            <div id="countdownTimer" class="countdown"></div>
-        </div>
-
-        <div id="easterEggZone" class="hidden-zone">
-            <h3>🎮 سیستم سرگرمی موقت داخلی</h3>
-            <div class="game-selector">
-                <button onclick="switchGame('ticTacToe')">رقابت با The Snitch</button>
-                <button onclick="switchGame('rps')">سنگ، کاغذ، قیچی</button>
-            </div>
-
-            <div id="ticTacToeGame" class="game-container">
-                <h4>شبیه‌ساز هوش مصنوعی (The Snitch) 🕵️‍♂️</h4>
-                <div class="ttt-board" id="tttBoard">
-                    <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
-                    <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
-                    <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
-                </div>
-                <p id="tttStatus"></p>
-                <button onclick="resetTicTacToe()" class="btn-reset">بازنشانی صفحه بازی</button>
-            </div>
-
-            <div id="rpsGame" class="game-container" style="display:none;">
-                <h4>سنگ، کاغذ، قیچی با هسته سیستم</h4>
-                <div class="rps-buttons">
-                    <button onclick="playRPS('👊')">👊 سنگ</button>
-                    <button onclick="playRPS('✋')">✋ کاغذ</button>
-                    <button onclick="playRPS('✌️')">✌️ قیچی</button>
-                </div>
-                <p id="rpsStatus"></p>
-            </div>
-        </div>
-
-        <footer onclick="triggerEasterEgg()"><strong>Powered by Mason</strong></footer>
+    <div class="input-group">
+      <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
+      <div class="input-wrapper">
+        <input type="number" id="minuteInput" placeholder="دقیقه" />
+        <span class="time-separator">:</span>
+        <input type="number" id="hourInput" placeholder="ساعت" />
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <button class="btn-calc" onclick="calculateTime()">محاسبه</button>
+
+    <div id="errorBox"></div>
+
+    <div id="result">
+      <span>ساعتی که می‌تونی بری:</span>
+      <br />
+      <span id="calculatedTime"></span>
+    </div>
+
+    <div id="easterEggZone" class="hidden-zone">
+      <h3>🎮 سیستم سرگرمی موقت داخلی</h3>
+      <div class="game-selector">
+        <button onclick="switchGame('ticTacToe')">رقابت با The Snitch</button>
+        <button onclick="switchGame('rps')">سنگ، کاغذ، قیچی</button>
+      </div>
+
+      <div id="ticTacToeGame" class="game-container">
+        <h4>شبیه‌ساز هوش مصنوعی (The Snitch) 🕵️‍♂️</h4>
+        <div class="ttt-board" id="tttBoard">
+          <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
+          <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
+          <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+        </div>
+        <p id="tttStatus"></p>
+        <button onclick="resetTicTacToe()" class="btn-reset">بازنشانی صفحه بازی</button>
+      </div>
+
+      <div id="rpsGame" class="game-container" style="display:none;">
+        <h4>سنگ، کاغذ، قیچی با هسته سیستم</h4>
+        <div class="rps-buttons">
+          <button onclick="playRPS('👊')">👊 سنگ</button>
+          <button onclick="playRPS('✋')">✋ کاغذ</button>
+          <button onclick="playRPS('✌️')">✌️ قیچی</button>
+        </div>
+        <p id="rpsStatus"></p>
+      </div>
+    </div>
+
+    <div class="powered-by" onclick="triggerEasterEgg()"><strong>Powered by Mason</strong></div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
