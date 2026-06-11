@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ۲. منطق محاسباتی اصلی و صمیمی شما
+// ۲. منطق محاسباتی اصلی و اورجینال خود شما به همراه تایمر هوشمند
 let abortController = null;
+let countdownInterval = null; // اینتروال مربوط به تایمر رنگی معکوس
 
 function calculateTime() {
   let hour = parseInt(document.getElementById("hourInput").value);
@@ -22,9 +23,12 @@ function calculateTime() {
   const errorBox = document.getElementById("errorBox");
   const resultBox = document.getElementById("result");
   const calculatedTime = document.getElementById("calculatedTime");
+  const countdownBox = document.getElementById("countdownBox");
 
+  if (countdownInterval) clearInterval(countdownInterval);
   resultBox.classList.remove("show");
   calculatedTime.innerHTML = "";
+  countdownBox.innerHTML = "";
 
   const prevLine = document.getElementById('timeStatusLine');
   if (prevLine) prevLine.remove();
@@ -54,19 +58,22 @@ function calculateTime() {
   let earlyBirdLimit = 7 * 60;
   const pad = (n) => n.toString().padStart(2, "0");
 
+  let targetExitHour = 17;
+  let targetExitMinute = 45;
+
   if (totalInputMinutes < earlyBirdLimit) {
     let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
-    let finalHour = Math.floor(baseMinutes / 60) % 24;
-    let finalMinute = baseMinutes % 60;
+    targetExitHour = Math.floor(baseMinutes / 60) % 24;
+    targetExitMinute = baseMinutes % 60;
     calculatedTime.innerHTML = `
-      ${pad(finalHour)}:${pad(finalMinute)}
+      ${pad(targetExitHour)}:${pad(targetExitMinute)}
       <span class="message message-early">تو که هنوز آفتاب نزده اومدی😨 </span>
     `;
   } else if (totalInputMinutes <= workStartLimit) {
     let totalMinutes = totalInputMinutes + 8 * 60 + 45;
-    let finalHour = Math.floor(totalMinutes / 60) % 24;
-    let finalMinute = totalMinutes % 60;
-    calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
+    targetExitHour = Math.floor(totalMinutes / 60) % 24;
+    targetExitMinute = totalMinutes % 60;
+    calculatedTime.innerHTML = `${pad(targetExitHour)}:${pad(targetExitMinute)}`;
   } else {
     let delayMinutes = totalInputMinutes - workStartLimit;
     let delayHourPart = Math.floor(delayMinutes / 60);
@@ -78,7 +85,7 @@ function calculateTime() {
 
     calculatedTime.innerHTML = `
       17:45
-      <span class="message message-late-info"> خواب موندی یا بازم همون بهونه همیشگی که اسنپ دیر اومد ？ 😒 </span>
+      <span class="message message-late-info"> خواب موندی یا بازم همون بهونه همیشگی که اسنپ دیر اومد ؟ 😒 </span>
       <span class="message message-leave-warning">حالا باید ${delayStr.trim()} مرخصی بگیری</span>
     `;
   }
@@ -124,6 +131,10 @@ function calculateTime() {
       } else {
         tempLine.textContent = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
       }
+      
+      // فعال‌سازی تایمر معکوس پویا و زنده با ثانیه‌شمار و تعویض رنگ
+      setupLiveCountdown(targetExitHour, targetExitMinute, now);
+      
     } else {
       const passed = Math.abs(diff);
       const hrs = Math.floor(passed / 60);
@@ -134,6 +145,8 @@ function calculateTime() {
       } else {
         tempLine.textContent = `✅ وقت رفتنت ${mins} دقیقه پیش بوده خوشگلم! زود جمع کن برو 😅`;
       }
+      countdownBox.innerHTML = "🎉 تایمت تمومه! بدو برو";
+      countdownBox.className = "countdown-container timer-safe";
     }
 
     if (globalNow) {
@@ -174,6 +187,46 @@ function calculateTime() {
   }, 10);
 }
 
+// تابع شمارش معکوس زنده و تغییر هوشمند رنگ باکس
+function setupLiveCountdown(exitH, exitM, initialNow) {
+    const countdownBox = document.getElementById("countdownBox");
+    
+    function updateTimer() {
+        const now = new Date();
+        const target = new Date();
+        target.setHours(exitH, exitM, 0, 0);
+        
+        const timeDiff = target - now;
+        
+        if (timeDiff <= 0) {
+            countdownBox.innerHTML = "⏱️ زمان خروج فرا رسید! وقت فراره 🚀";
+            countdownBox.className = "countdown-container timer-safe";
+            clearInterval(countdownInterval);
+            return;
+        }
+        
+        const totalSeconds = Math.floor(timeDiff / 1000);
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+        
+        const pad = (n) => n.toString().padStart(2, "0");
+        countdownBox.innerHTML = `⏱️ شمارش معکوس تا خروج: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        
+        // منطق تعویض هوشمند رنگ بر اساس زمان باقی‌مانده
+        if (totalSeconds > 3600) {
+            countdownBox.className = "countdown-container timer-safe"; // بالای ۱ ساعت -> آبی
+        } else if (totalSeconds <= 3600 && totalSeconds > 900) {
+            countdownBox.className = "countdown-container timer-warning"; // زیر ۱ ساعت -> نارنجی
+        } else {
+            countdownBox.className = "countdown-container timer-critical"; // زیر ۱۵ دقیقه -> قرمز چشمک‌زن
+        }
+    }
+    
+    updateTimer();
+    countdownInterval = setInterval(updateTimer, 1000);
+}
+
 // ۳. دکمه فرار سریع با اکسل و دکمه Escape
 function togglePanic() {
     const excel = document.getElementById("excelScreen");
@@ -194,7 +247,6 @@ function triggerEasterEgg() {
     }
 }
 
-// الگوهای برد دوز (اینجا تعریف شد تا دوز بدون مشکل کار کند)
 const winPatterns = [
     [0,1,2], [3,4,5], [6,7,8],
     [0,3,6], [1,4,7], [2,5,8],
