@@ -8,10 +8,8 @@
 </head>
 <body>
 
-    <!-- دکمه فرار سریع در بالاترین لایه -->
-    <button id="panicBtn" onclick="togglePanic()">وضعیت قرمز! 🚨</button>
+    <button id="panicBtn" onclick="togglePanic()">مشاهده گزارش خطا 🚨</button>
 
-    <!-- صفحه اکسل فیک (در حالت عادی مخفی است) -->
     <div id="excelScreen" onclick="togglePanic()">
         <div class="excel-toolbar">ترازنامه مالی سه‌ماهه اول - Microsoft Excel (Read-Only)</div>
         <div class="excel-table-container">
@@ -36,54 +34,49 @@
         </div>
     </div>
 
-    <!-- داشبورد اصلی سایت -->
     <div class="main-container" id="mainDashboard">
         
-        <!-- هدر شامل تقویم و آب و هوا -->
         <div class="dashboard-header">
             <div class="header-box" id="calendarBox">📅 در حال بارگذاری تاریخ...</div>
-            <div class="header-box" id="weatherBox">☀️ در حال دریافت وضع هوا...</div>
+            <div class="header-box" id="weatherBox">☀️ دریافت وضعیت هوا...</div>
         </div>
 
         <h1>محاسبه‌گر ساعت خروج</h1>
         
         <div class="input-group">
-            <label>ساعت ورود:</label>
+            <label>زمان ورود به شرکت را وارد کنید:</label>
             <div class="time-inputs">
-                <input type="number" id="entryHour" placeholder="ساعت (مثلا 8)" min="0" max="23">
                 <input type="number" id="entryMinute" placeholder="دقیقه (مثلا 30)" min="0" max="59">
+                <span class="time-separator">:</span>
+                <input type="number" id="entryHour" placeholder="ساعت (مثلا 8)" min="0" max="23">
             </div>
         </div>
 
         <button class="btn-calc" onclick="calculateExit()">محاسبه ساعت خروج</button>
 
-        <!-- باکس نتایج و تایمر معکوس -->
         <div id="resultBox" class="result-box">
             <p id="exitTimeText"></p>
             <div id="countdownTimer" class="countdown"></div>
         </div>
 
-        <!-- بخش مخفی بازی (Easter Egg) -->
         <div id="easterEggZone" class="hidden-zone">
-            <h3>🎮 بازی‌های محرمانه (ضد کلافگی)</h3>
+            <h3>🎮 سیستم سرگرمی موقت داخلی</h3>
             <div class="game-selector">
-                <button onclick="switchGame('ticTacToe')">دوز با The Snitch</button>
+                <button onclick="switchGame('ticTacToe')">رقابت با The Snitch</button>
                 <button onclick="switchGame('rps')">سنگ، کاغذ، قیچی</button>
             </div>
 
-            <!-- بازی دوز -->
             <div id="ticTacToeGame" class="game-container">
-                <h4>مسابقه دوز با The Snitch 🕵️‍♂️</h4>
+                <h4>شبیه‌ساز هوش مصنوعی (The Snitch) 🕵️‍♂️</h4>
                 <div class="ttt-board" id="tttBoard">
                     <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
                     <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
                     <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
                 </div>
                 <p id="tttStatus"></p>
-                <button onclick="resetTicTacToe()">شروع مجدد دوز</button>
+                <button onclick="resetTicTacToe()" class="btn-reset">بازنشانی صفحه بازی</button>
             </div>
 
-            <!-- بازی سنگ کاغذ قیچی -->
             <div id="rpsGame" class="game-container" style="display:none;">
                 <h4>سنگ، کاغذ، قیچی با سیستم</h4>
                 <div class="rps-buttons">
@@ -95,7 +88,6 @@
             </div>
         </div>
 
-        <!-- فوتر محرک بازی مخفی -->
         <footer onclick="triggerEasterEgg()">Powered by Mason</footer>
     </div>
 
