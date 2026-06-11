@@ -1,17 +1,17 @@
 :root {
-    --bg-light: #f4f6f9;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --panel-bg: #ffffff;
-    --text-color: #333333;
-    --text-muted: #666666;
-    --border-color: #dddddd;
-    --primary: #0078d4;
-    --primary-hover: #106ebe;
-    --accent: #2b579a;
+    --text-color: #2d3748;
+    --text-muted: #718096;
+    --border-color: #e2e8f0;
+    --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --btn-hover: #00c6ff;
+    --accent-color: #5a67d8;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-light);
+    background: var(--bg-gradient);
     color: var(--text-color);
     margin: 0;
     padding: 20px;
@@ -20,167 +20,207 @@ body {
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
-    line-height: 1.7;
+    line-height: 1.8;
 }
 
-/* لبه‌های کاملاً گرد کانتینر اصلی */
+/* کانتینر اصلی با گوشه‌های کاملاً گرد و سایه نرم مدرن */
 .container {
     background: var(--panel-bg);
-    border-radius: 16px;
-    padding: 40px 30px;
+    border-radius: 24px;
+    padding: 45px 35px;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--border-color);
+    max-width: 460px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
 }
 
 h2 {
-    font-size: 1.4rem;
-    color: var(--accent);
-    margin-top: 10px;
-    margin-bottom: 30px;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-top: 5px;
+    margin-bottom: 35px;
+    font-weight: 800;
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     margin-bottom: 35px;
-    gap: 12px;
+    gap: 15px;
 }
 
 /* لبه‌های گرد باکس‌های تاریخ و هوا */
 .header-box {
-    background: #f8f9fa;
-    padding: 12px 10px;
-    border-radius: 12px;
+    background: #f7fafc;
+    padding: 12px;
+    border-radius: 16px;
     font-size: 0.85rem;
     color: var(--text-muted);
     flex: 1;
-    border: 1px solid #eaeaea;
+    border: 1px solid #edf2f7;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .input-group {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .input-label {
     display: block;
-    margin-bottom: 15px;
-    font-size: 0.95rem;
-    color: var(--text-color);
+    margin-bottom: 18px;
+    font-size: 1rem;
+    color: #4a5568;
+    font-weight: 600;
 }
 
 .input-wrapper {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     justify-content: center;
     align-items: center;
-    direction: ltr;
 }
 
-/* لبه‌های گرد فیلدهای ورودی عدد */
+/* فیلدهای ورودی با لبه‌های کاملاً متمایز و گرد */
 input[type="number"] {
     width: 110px;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
+    padding: 14px;
+    border-radius: 16px;
+    border: 2px solid var(--border-color);
     text-align: center;
-    font-size: 1rem;
-    background-color: #ffffff;
-    color: #000000;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #f8fafc;
+    color: #1a202c;
+    transition: all 0.25s ease;
 }
 
-input:focus {
+input[type="number"]:focus {
     outline: none;
-    border-color: var(--primary);
+    border-color: #4facfe;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.2);
 }
 
 .time-separator {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--text-muted);
+    color: #a0aec0;
 }
 
-/* لبه‌های گرد دکمه اصلی */
+/* دکمه محاسبه با گرادیان رنگی پرانرژی و لبه گرد */
 button {
     cursor: pointer;
     border: none;
-    border-radius: 12px;
-    transition: background 0.2s;
+    transition: all 0.25s ease;
 }
 
 .btn-calc {
-    background: var(--primary);
+    background: var(--primary-gradient);
     color: white;
-    padding: 14px 20px;
-    font-size: 1rem;
+    padding: 16px 20px;
+    font-size: 1.05rem;
     width: 100%;
     font-weight: bold;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(79, 172, 254, 0.3);
 }
 
 .btn-calc:hover {
-    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
 }
 
-/* لبه‌های گرد باکس‌های خطا و نتایج */
+/* استایل باکس خطا و نتیجه */
 #errorBox, #result {
     display: none;
-    margin-top: 30px;
-    padding: 20px 15px;
-    border-radius: 12px;
+    margin-top: 35px;
+    padding: 22px 18px;
+    border-radius: 18px;
     font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 
 #errorBox {
-    background-color: #fff1f0;
-    border: 1px solid #ffa39e;
-    color: #a80000;
+    background-color: #fff5f5;
+    border: 1px solid #fed7d7;
+    color: #c53030;
+    line-height: 1.6;
 }
 
 #result {
-    background: #f0f7ff;
-    border: 1px solid #cde2ff;
-    color: #004b87;
-    font-weight: bold;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    color: #2d3748;
+}
+
+.result-title {
+    font-weight: 600;
+    color: #4a5568;
 }
 
 #calculatedTime {
     display: block;
-    font-size: 1.4rem;
-    margin-top: 10px;
-    color: #a80000;
+    font-size: 1.7rem;
+    margin-top: 8px;
+    color: #2b6cb0;
+    font-weight: 800;
 }
 
 .message {
     display: block;
     font-size: 0.95rem;
-    margin-top: 12px;
-    font-weight: normal;
+    margin-top: 14px;
+    font-weight: 500;
 }
 
-.message-early { color: #d46b08; }
-.message-late-info { color: #531dab; }
-.message-leave-warning { color: #c41d7f; font-weight: bold; }
+.message-early { color: #dd6b20; }
+.message-late-info { color: #6b46c1; }
+.message-leave-warning { color: #b83280; font-weight: bold; }
+
+/* استایل‌های داینامیک تایمر معکوس */
+.countdown-container {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* رنگ‌های تایمر معکوس */
+.timer-safe { background: #ebf8ff; color: #2b6cb0; }       /* آبی */
+.timer-warning { background: #fffaf0; color: #dd6b20; }    /* نارنجی */
+.timer-critical {                                          /* قرمز چشمک زن */
+    background: #fff5f5; 
+    color: #e53e3e; 
+    animation: pulse 1s infinite alternate; 
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; transform: scale(0.99); }
+    100% { opacity: 1; transform: scale(1.01); }
+}
 
 #errorBox.show, #result.show {
     display: block;
 }
 
-/* لبه‌های گرد دکمه فرار سریع */
+/* تنظیمات لبه گرد دکمه فرار و شیت اکسل */
 #panicBtn {
     position: fixed;
     top: 15px;
     left: 15px;
-    background: #e1dfdd;
-    color: #323130;
-    border: 1px solid #a19f9d;
-    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+    padding: 8px 14px;
     font-size: 0.75rem;
     z-index: 9999;
-    border-radius: 12px; /* گرد شدن دکمه فرار */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-#panicBtn:hover { background: #f3f2f1; }
 
 #excelScreen {
     display: none;
@@ -194,61 +234,55 @@ button {
     direction: rtl;
 }
 
-.excel-toolbar {
-    background: #107c41;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
+.excel-toolbar { background: #107c41; color: white; padding: 10px; font-weight: bold; }
 .excel-table-container { padding: 20px; }
 table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #bbb; padding: 8px; font-size: 13px; }
+th, td { border: 1px solid #bbb; padding: 10px; font-size: 13px; border-radius: 4px; }
 th { background: #f3f3f3; }
 
 /* بخش بازی مخفی */
 .hidden-zone {
     display: none;
     margin-top: 40px;
-    border-top: 1px dashed var(--border-color);
-    padding-top: 25px;
+    border-top: 2px dashed #e2e8f0;
+    padding-top: 30px;
 }
 
-.hidden-zone h3 { font-size: 1.1rem; color: var(--accent); margin-bottom: 15px; }
+.hidden-zone h3 { font-size: 1.1rem; color: #4a5568; margin-bottom: 20px; }
 
 .ttt-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    max-width: 170px;
+    gap: 10px;
+    max-width: 180px;
     margin: 20px auto;
 }
 
 /* لبه‌های کاملاً گرد خانه‌های دوز */
 .cell {
-    width: 50px; height: 50px;
-    background: #f8f9fa;
-    border: 1px solid var(--border-color);
+    width: 55px; height: 55px;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
     display: flex; justify-content: center; align-items: center;
-    font-size: 1.3rem; font-weight: bold; cursor: pointer;
-    border-radius: 12px; /* گرد شدن خانه ها */
+    font-size: 1.4rem; font-weight: bold; cursor: pointer;
+    border-radius: 14px;
+    transition: all 0.2s;
 }
-.cell:hover { background: #eaeaea; }
+.cell:hover { background: #edf2f7; transform: scale(1.05); }
 
-/* لبه‌های گرد دکمه بازنشانی بازی */
 .btn-reset {
-    background: #fff; border: 1px solid var(--border-color);
-    padding: 6px 16px; font-size: 0.85rem; margin-top: 15px;
-    border-radius: 12px; /* گرد شدن دکمه ریست */
+    background: #ffffff; border: 2px solid #e2e8f0;
+    padding: 8px 18px; font-size: 0.85rem; margin-top: 20px;
+    border-radius: 12px;
+    font-weight: 600;
 }
-.btn-reset:hover { background: #f4f6f9; }
+.btn-reset:hover { background: #f7fafc; }
 
 /* فوتر شرکتی بولد */
 .powered-by {
-    margin-top: 45px;
+    margin-top: 50px;
     font-size: 0.85rem;
-    color: var(--text-color);
+    color: var(--text-muted);
     cursor: pointer;
     user-select: none;
 }
