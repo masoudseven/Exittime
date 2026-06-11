@@ -1,253 +1,169 @@
-@font-face {
-  font-family: 'Estedad';
-  src: url('Estedad-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+:root {
+    --primary: #4a90e2;
+    --bg-dark: #121212;
+    --panel-bg: rgba(255, 255, 255, 0.1);
+    --text-color: #ffffff;
 }
 
 body {
-  font-family: 'Estedad', sans-serif;
-  background: #eef2f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
-  direction: rtl;
-  position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1f4068, #162447);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.container {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  width: 380px;
-  min-height: 480px;
-  position: relative;
-  opacity: 0;
-  transform: scale(0.95);
-  animation: fadeInScale 0.6s ease forwards;
+.main-container {
+    background: var(--panel-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
 }
 
-@keyframes fadeInScale {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 10px;
 }
 
-h2 {
-  color: #333;
-  margin-bottom: 1.5rem;
+.header-box {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    flex: 1;
 }
 
-.input-group {
-  margin-bottom: 1.5rem;
-}
-
-.input-label {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.input-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+.time-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 5px;
 }
 
 input {
-  width: 140px;
-  padding: 0.8rem 1.5rem;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  text-align: center;
-  box-sizing: border-box;
+    width: 80px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    font-size: 1rem;
 }
 
 button {
-  width: 140px;
-  margin-top: 1rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  background-color: transparent;
-  color: #4CAF50;
-  border: 2px solid #4CAF50;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  box-sizing: border-box;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: 0.2s;
 }
 
-button:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-#result {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  font-size: 1.4rem;
-  background-color: #f1f1f1;
-  color: #1B75BC;
-  padding: 0.8rem 1.5rem;
-  border-radius: 30px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.4s ease;
-  font-weight: bold;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#result.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#calculatedTime .message {
-  display: block;
-  font-size: 1rem;
-  margin-top: 8px;
-  font-weight: normal;
-}
-
-#calculatedTime .message-early {
-  color: #28a745;
-}
-
-#calculatedTime .message-late-info {
-  color: #ff9800;
-}
-
-#calculatedTime .message-leave-warning {
-  color: #f44336;
-  font-weight: bold;
-}
-
-#errorBox {
-  margin-top: 1rem;
-  background-color: #ffe6e6;
-  color: #b00020;
-  padding: 0.8rem 1.5rem;
-  border-radius: 30px;
-  font-weight: bold;
-  display: none;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#errorBox.show {
-  display: block;
-}
-
-.powered-by {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.9rem;
-  color: #555;
-  font-weight: bold;
-  opacity: 0.7;
-}
-
-.container .theme-toggle {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  font-size: 0.9rem;
-  color: #333;
-  z-index: 10;
-}
-
-.container .theme-toggle input {
-  margin-left: 8px;
-}
-
-/* 🌙 حالت دارک مود */
-body.dark-mode {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-body.dark-mode .container {
-  background: #2c2c2c;
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
-}
-
-body.dark-mode input {
-  border-color: #666;
-  background-color: #444;
-  color: #eee;
-}
-
-body.dark-mode button {
-  border-color: #4CAF50;
-  background-color: transparent;
-  color: #4CAF50;
-}
-
-body.dark-mode button:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-body.dark-mode #result {
-  background-color: #333;
-  color: #a0d8ff;
-}
-
-body.dark-mode #errorBox {
-  background-color: #5c2b2b;
-  color: #ffaaaa;
-}
-
-body.dark-mode h2 {
-  color: #eee;
-}
-
-body.dark-mode .powered-by {
-  color: #aaa;
-}
-
-body.dark-mode .theme-toggle {
-  color: #eee;
-}
-
-/* 📱 ریسپانسیو */
-@media (max-width: 420px) {
-  .container {
-    width: 90%;
-    padding: 1.5rem;
-    min-height: 0;
-  }
-
-  .input-wrapper {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  input,
-  button {
+.btn-calc {
+    background: #e43f5a;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    margin-top: 20px;
     width: 100%;
-  }
-
-  #result {
-    font-size: 1.2rem;
-    padding: 0.6rem 1rem;
-  }
 }
 
-/* ✅ فقط اینو اضافه کردم، هیچ چیز دیگه تغییر نکرد */
-#result .message {
-  font-size: 1rem;
-  font-weight: normal;
+.result-box {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    display: none;
+}
+
+.countdown {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #00ffcc;
+    margin-top: 10px;
+}
+
+/* استایل دکمه فرار و صفحه اکسل */
+#panicBtn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #ff4757;
+    color: white;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    z-index: 9999;
+}
+
+#excelScreen {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #ffffff;
+    color: #000000;
+    z-index: 9998;
+    font-family: Arial, sans-serif;
+    text-align: right;
+    direction: rtl;
+}
+
+.excel-toolbar {
+    background: #107c41;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.excel-table-container { padding: 20px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #bbb; padding: 8px; font-size: 13px; }
+th { background: #f3f3f3; }
+
+/* بخش بازی مخفی */
+.hidden-zone {
+    display: none;
+    margin-top: 30px;
+    border-top: 2px dashed rgba(255,255,255,0.3);
+    padding-top: 20px;
+}
+
+.game-selector button {
+    background: #4a90e2;
+    color: white;
+    padding: 8px 12px;
+    margin: 5px;
+}
+
+.ttt-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    max-width: 180px;
+    margin: 15px auto;
+}
+
+.cell {
+    width: 55px; height: 55px;
+    background: rgba(255,255,255,0.2);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.5rem; font-weight: bold; cursor: pointer;
+}
+
+.rps-buttons button { font-size: 1.2rem; padding: 10px; margin: 5px; }
+
+footer {
+    margin-top: 30px;
+    font-size: 0.75rem;
+    opacity: 0.5;
+    cursor: pointer;
+    user-select: none;
 }
