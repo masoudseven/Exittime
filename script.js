@@ -4,21 +4,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', options);
     
-    // دریافت مستقیم دمای لحظه‌ای تهران با مختصات دقیق (35.6892 , 51.3890)
+    // دریافت مستقیم دمای لحظه‌ای تهران با مختصات دقیق
     try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
         const data = await response.json();
         const temp = Math.round(data.current_weather.temperature);
         
-        // نمایش مستقیم دمای تهران در سایت
         document.getElementById("weatherBox").innerText = `🌡️ دمای تهران: ${temp}°C`;
     } catch (error) {
-        // در صورت بروز خطای شبکه یا API
         document.getElementById("weatherBox").innerText = "☀️ تهران: در حال به‌روزرسانی...";
     }
 });
 
-// ۲. محاسبه ساعت خروج و راه اندازی تایمر
+// ۲. محاسبه ساعت خروج و راه اندازی تایمر (با پیام‌های صمیمی نسخه اول شما)
 let timerInterval;
 function calculateExit() {
     const hour = parseInt(document.getElementById("entryHour").value);
@@ -29,7 +27,7 @@ function calculateExit() {
         return;
     }
 
-    // فرستادن زمان خروج به میزان ۸ ساعت و ۴۵ دقیقه بعد از ورود (استاندارد شرکتی)
+    // محاسبه بر اساس استاندارد ۸ ساعت و ۴۵ دقیقه زمان حضور
     let exitHour = hour + 8;
     let exitMinute = minute + 45;
 
@@ -39,10 +37,11 @@ function calculateExit() {
     }
 
     const pad = (num) => num.toString().padStart(2, '0');
-    document.getElementById("exitTimeText").innerText = `ساعت آزادی شما: ${pad(exitHour)}:${pad(exitMinute)}`;
+    
+    // استفاده دقیق از پیام نسخه اول شما
+    document.getElementById("exitTimeText").innerText = `ساعت خروج شما: ${pad(exitHour)}:${pad(exitMinute)} (بدو برو خونه دیگه، اضافه‌کاری پول نمیشه! 😉)`;
     document.getElementById("resultBox").style.display = "block";
 
-    // فعال‌سازی تایمر معکوس زنده
     startCountdown(exitHour, exitMinute);
 }
 
@@ -57,7 +56,8 @@ function startCountdown(targetHour, targetMinute) {
         const diff = target - now;
 
         if (diff <= 0) {
-            document.getElementById("countdownTimer").innerText = "تایمت تمومه! بدو برو که آزادی 🎉";
+            // پیام پایان تایمر نسخه اول شما
+            document.getElementById("countdownTimer").innerText = "تایمت تمومه! سیستم رو خاموش کن و فرار کن! 🎉";
             clearInterval(timerInterval);
             return;
         }
@@ -67,11 +67,12 @@ function startCountdown(targetHour, targetMinute) {
         const secs = Math.floor((diff % 60000) / 1000);
 
         const pad = (num) => num.toString().padStart(2, '0');
-        document.getElementById("countdownTimer").innerText = `زمان باقی‌مانده: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        // پیام ثانیه‌شمار
+        document.getElementById("countdownTimer").innerText = `زمان باقی‌مانده تا فرار: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
     }, 1000);
 }
 
-// ۳. دکمه فرار سریع (اکسل فیک)
+// ۳. دکمه فرار سریع (نمایش ترازنامه مالی در اکسل)
 function togglePanic() {
     const excel = document.getElementById("excelScreen");
     if (excel.style.display === "none" || excel.style.display === "") {
@@ -81,12 +82,12 @@ function togglePanic() {
     }
 }
 
-// گوش دادن به دکمه Esc کیبورد برای فرار سریع
+// فرار سریع با زدن دکمه Escape کیبورد
 window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") togglePanic();
 });
 
-// ۴. بخش مخفی بازی (Easter Egg)
+// ۴. بخش مخفی بازی (Easter Egg) با ۵ بار کلیک روی فوتر
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
@@ -107,10 +108,16 @@ function switchGame(gameName) {
     }
 }
 
-// --- بازی دوز با The Snitch ---
+// --- هوش مصنوعی ارتقایافته دوز (The Snitch) ---
 let board = ["", "", "", "", "", "", "", "", ""];
 const cells = document.querySelectorAll(".cell");
 cells.forEach(cell => cell.addEventListener("click", handleCellClick));
+
+const winPatterns = [
+    [0,1,2], [3,4,5], [6,7,8],
+    [0,3,6], [1,4,7], [2,5,8],
+    [0,4,8], [2,4,6]
+];
 
 function handleCellClick(e) {
     const index = e.target.getAttribute("data-index");
@@ -128,36 +135,64 @@ function handleCellClick(e) {
         return;
     }
 
-    // نوبت هوش مصنوعی (The Snitch)
-    setTimeout(snitchMove, 400);
+    setTimeout(snitchMove, 300);
 }
 
 function snitchMove() {
+    // ۱. بررسی شانس برد مستقیم سیستم (O)
+    for (let pattern of winPatterns) {
+        let countO = pattern.filter(idx => board[idx] === "O").length;
+        let countEmpty = pattern.filter(idx => board[idx] === "").length;
+        if (countO === 2 && countEmpty === 1) {
+            let targetIdx = pattern.find(idx => board[idx] === "");
+            makeMove(targetIdx);
+            return;
+        }
+    }
+
+    // ۲. بررسی شانس برد کاربر (X) جهت دفاع و بلاک کردن
+    for (let pattern of winPatterns) {
+        let countX = pattern.filter(idx => board[idx] === "X").length;
+        let countEmpty = pattern.filter(idx => board[idx] === "").length;
+        if (countX === 2 && countEmpty === 1) {
+            let targetIdx = pattern.find(idx => board[idx] === "");
+            makeMove(targetIdx);
+            return;
+        }
+    }
+
+    // ۳. گرفتن خانه استراتژیک وسط در صورت خالی بودن
+    if (board[4] === "") {
+        makeMove(4);
+        return;
+    }
+
+    // ۴. انتخاب رندوم از بین خانه‌های باقی‌مانده
     let emptyCells = board.map((val, idx) => val === "" ? idx : null).filter(val => val !== null);
     if (emptyCells.length === 0) return;
-
     let randomIdx = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-    board[randomIdx] = "O";
-    document.querySelector(`[data-index='${randomIdx}']`).innerText = "O";
+    makeMove(randomIdx);
+}
+
+function makeMove(index) {
+    board[index] = "O";
+    document.querySelector(`[data-index='${index}']`).innerText = "O";
 
     if (checkWin(board, "O")) {
         document.getElementById("tttStatus").innerText = "The Snitch برنده شد! بدو برو سر کارت تا چغلیتو به مدیر نکرده! 🏃‍♂️💨";
+    } else if (!board.includes("")) {
+        document.getElementById("tttStatus").innerText = "مساوی شد! هردو خسته نباشید 🤝";
     }
 }
 
 function checkWin(b, player) {
-    const winPatterns = [
-        [0,1,2], [3,4,5], [6,7,8],
-        [0,3,6], [1,4,7], [2,5,8],
-        [0,4,8], [2,4,6]
-    ];
     return winPatterns.some(pattern => pattern.every(idx => b[idx] === player));
 }
 
 function resetTicTacToe() {
     board = ["", "", "", "", "", "", "", "", ""];
     cells.forEach(cell => cell.innerText = "");
-    document.getElementById("tttStatus").innerText = "نوبت شماست (X)";
+    document.getElementById("tttStatus").innerText = "نوبت حرکت شما (X)";
 }
 
 // --- بازی سنگ کاغذ قیچی ---
