@@ -1,11 +1,11 @@
 // ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی و آب و هوا)
 document.addEventListener("DOMContentLoaded", async () => {
-    // تقویم محلی شمسی
+    // تقویم محلی شمسی (مثال: پنجشنبه ۲۱ خرداد)
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
-    // تقویم میلادی واقعی و کامل
-    const gregorianOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    // تقویم میلادی دقیقاً هم‌فرمت و متناظر با تایل اول (مثال: Thursday, June 11)
+    const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
     // دریافت مستقیم دمای لحظه‌ای تهران
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ۲. منطق محاسباتی اصلی شما به همراه تایمر هوشمند
+// ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
 let abortController = null;
 let countdownInterval = null;
 
