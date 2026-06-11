@@ -64,30 +64,21 @@
 
     <div id="easterEggZone" class="hidden-zone">
       <h3>🎮 سیستم سرگرمی موقت داخلی</h3>
-      <div class="game-selector">
-        <button onclick="switchGame('ticTacToe')">رقابت با The Snitch</button>
-        <button onclick="switchGame('rps')">سنگ، کاغذ، قیچی</button>
-      </div>
-
       <div id="ticTacToeGame" class="game-container">
         <h4>شبیه‌ساز هوش مصنوعی (The Snitch) 🕵️‍♂️</h4>
         <div class="ttt-board" id="tttBoard">
-          <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
-          <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
-          <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+          <div class="cell" data-index="0"></div>
+          <div class="cell" data-index="1"></div>
+          <div class="cell" data-index="2"></div>
+          <div class="cell" data-index="3"></div>
+          <div class="cell" data-index="4"></div>
+          <div class="cell" data-index="5"></div>
+          <div class="cell" data-index="6"></div>
+          <div class="cell" data-index="7"></div>
+          <div class="cell" data-index="8"></div>
         </div>
         <p id="tttStatus"></p>
         <button onclick="resetTicTacToe()" class="btn-reset">بازنشانی صفحه بازی</button>
-      </div>
-
-      <div id="rpsGame" class="game-container" style="display:none;">
-        <h4>سنگ، کاغذ، قیچی با هسته سیستم</h4>
-        <div class="rps-buttons">
-          <button onclick="playRPS('👊')">👊 سنگ</button>
-          <button onclick="playRPS('✋')">✋ کاغذ</button>
-          <button onclick="playRPS('✌️')">✌️ قیچی</button>
-        </div>
-        <p id="rpsStatus"></p>
       </div>
     </div>
 
