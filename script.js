@@ -1,21 +1,30 @@
-// ۱. مدیریت ویجت تقویم و آب و هوای زنده تهران
+// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، آب و هوا و ساعت زنده میلادی)
 document.addEventListener("DOMContentLoaded", async () => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', options);
+    const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+    document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
+    
+    function updateGregorianClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+        const dayStr = now.toLocaleDateString('en-US', { weekday: 'short' });
+        document.getElementById("gregorianTimeBox").innerText = `🌐 ${dayStr} ${timeStr}`;
+    }
+    updateGregorianClock();
+    setInterval(updateGregorianClock, 1000);
     
     try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
         const data = await response.json();
         const temp = Math.round(data.current_weather.temperature);
-        document.getElementById("weatherBox").innerText = `🌡️ دمای تهران: ${temp}°C`;
+        document.getElementById("weatherBox").innerText = `🌡️ تهران: ${temp}°C`;
     } catch (error) {
-        document.getElementById("weatherBox").innerText = "☀️ تهران: در حال به‌روزرسانی...";
+        document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 });
 
 // ۲. منطق محاسباتی اصلی و اورجینال خود شما به همراه تایمر هوشمند
 let abortController = null;
-let countdownInterval = null; // اینتروال مربوط به تایمر رنگی معکوس
+let countdownInterval = null;
 
 function calculateTime() {
   let hour = parseInt(document.getElementById("hourInput").value);
@@ -132,8 +141,7 @@ function calculateTime() {
         tempLine.textContent = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
       }
       
-      // فعال‌سازی تایمر معکوس پویا و زنده با ثانیه‌شمار و تعویض رنگ
-      setupLiveCountdown(targetExitHour, targetExitMinute, now);
+      setupLiveCountdown(targetExitHour, targetExitMinute);
       
     } else {
       const passed = Math.abs(diff);
@@ -187,8 +195,7 @@ function calculateTime() {
   }, 10);
 }
 
-// تابع شمارش معکوس زنده و تغییر هوشمند رنگ باکس
-function setupLiveCountdown(exitH, exitM, initialNow) {
+function setupLiveCountdown(exitH, exitM) {
     const countdownBox = document.getElementById("countdownBox");
     
     function updateTimer() {
@@ -213,13 +220,12 @@ function setupLiveCountdown(exitH, exitM, initialNow) {
         const pad = (n) => n.toString().padStart(2, "0");
         countdownBox.innerHTML = `⏱️ شمارش معکوس تا خروج: ${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
         
-        // منطق تعویض هوشمند رنگ بر اساس زمان باقی‌مانده
         if (totalSeconds > 3600) {
-            countdownBox.className = "countdown-container timer-safe"; // بالای ۱ ساعت -> آبی
+            countdownBox.className = "countdown-container timer-safe";
         } else if (totalSeconds <= 3600 && totalSeconds > 900) {
-            countdownBox.className = "countdown-container timer-warning"; // زیر ۱ ساعت -> نارنجی
+            countdownBox.className = "countdown-container timer-warning";
         } else {
-            countdownBox.className = "countdown-container timer-critical"; // زیر ۱۵ دقیقه -> قرمز چشمک‌زن
+            countdownBox.className = "countdown-container timer-critical";
         }
     }
     
@@ -227,7 +233,7 @@ function setupLiveCountdown(exitH, exitM, initialNow) {
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
-// ۳. دکمه فرار سریع با اکسل و دکمه Escape
+// ۳. شیت اکسل فیک فقط با دکمه Escape فعال/غیرفعال می‌شود
 function togglePanic() {
     const excel = document.getElementById("excelScreen");
     excel.style.display = (excel.style.display === "block") ? "none" : "block";
