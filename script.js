@@ -1,17 +1,14 @@
-// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، آب و هوا و ساعت زنده میلادی)
+// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی و آب و هوا)
 document.addEventListener("DOMContentLoaded", async () => {
+    // تقویم محلی شمسی
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
-    function updateGregorianClock() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
-        const dayStr = now.toLocaleDateString('en-US', { weekday: 'short' });
-        document.getElementById("gregorianTimeBox").innerText = `🌐 ${dayStr} ${timeStr}`;
-    }
-    updateGregorianClock();
-    setInterval(updateGregorianClock, 1000);
+    // تقویم میلادی واقعی و کامل
+    const gregorianOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
+    // دریافت مستقیم دمای لحظه‌ای تهران
     try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
         const data = await response.json();
@@ -22,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ۲. منطق محاسباتی اصلی و اورجینال خود شما به همراه تایمر هوشمند
+// ۲. منطق محاسباتی اصلی شما به همراه تایمر هوشمند
 let abortController = null;
 let countdownInterval = null;
 
@@ -233,7 +230,7 @@ function setupLiveCountdown(exitH, exitM) {
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
-// ۳. شیت اکسل فیک فقط با دکمه Escape فعال/غیرفعال می‌شود
+// ۳. شیت اکسل فیک فقط و فقط با دکمه Escape کیبورد باز و بسته می‌شود
 function togglePanic() {
     const excel = document.getElementById("excelScreen");
     excel.style.display = (excel.style.display === "block") ? "none" : "block";
@@ -242,7 +239,7 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") togglePanic();
 });
 
-// ۴. بخش بازی مخفی دوز (۵ کلیک روی فوتر)
+// ۴. بخش بازی مخفی دوز (۵ کلیک روی متن Powered by Mason در فوتر)
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
