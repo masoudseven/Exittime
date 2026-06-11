@@ -1,10 +1,10 @@
 // ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی و آب و هوا)
 document.addEventListener("DOMContentLoaded", async () => {
-    // تقویم محلی شمسی (مثال: پنجشنبه ۲۱ خرداد)
+    // تقویم محلی شمسی (پنجشنبه ۲۱ خرداد)
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
-    // تقویم میلادی دقیقاً هم‌فرمت و متناظر با تایل اول (مثال: Thursday, June 11)
+    // تقویم میلادی هم‌فرمت (Thursday, June 11)
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
@@ -230,16 +230,7 @@ function setupLiveCountdown(exitH, exitM) {
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
-// ۳. شیت اکسل فیک فقط و فقط با دکمه Escape کیبورد باز و بسته می‌شود
-function togglePanic() {
-    const excel = document.getElementById("excelScreen");
-    excel.style.display = (excel.style.display === "block") ? "none" : "block";
-}
-window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") togglePanic();
-});
-
-// ۴. بخش بازی مخفی دوز (۵ کلیک روی متن Powered by Mason در فوتر)
+// ۳. بخش بازی مخفی دوز (۵ کلیک روی متن فوتر)
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
@@ -247,6 +238,7 @@ function triggerEasterEgg() {
         document.getElementById("easterEggZone").style.display = "block";
         document.getElementById("easterEggZone").scrollIntoView({ behavior: 'smooth' });
         resetTicTacToe();
+        clickCount = 0; // ریست تعداد کلیک
     }
 }
 
@@ -268,7 +260,7 @@ function handleCellClick(e) {
     e.target.innerText = "X";
 
     if (checkWin(board, "X")) {
-        document.getElementById("tttStatus").innerText = "تبریک! The Snitch رو شکست دادی، نتونست آمارِتو لو بده! 🤫";
+        document.getElementById("tttStatus").innerText = "تبریک! The Gossiper رو شکست دادی، نتونست آمارِتو لو بده! 🤫";
         return;
     }
     if (!board.includes("")) {
@@ -299,7 +291,7 @@ function makeMove(index) {
     board[index] = "O";
     document.querySelector(`[data-index='${index}']`).innerText = "O";
     if (checkWin(board, "O")) {
-        document.getElementById("tttStatus").innerText = "The Snitch برنده شد! بدو برو سر کارت تا چغلیتو به مدیر نکرده! 🏃‍♂️💨";
+        document.getElementById("tttStatus").innerText = "The Gossiper برنده شد! بدو برو سر کارت تا چغلیتو به مدیر نکرده! 🏃‍♂️💨";
     } else if (!board.includes("")) {
         document.getElementById("tttStatus").innerText = "مساوی شد! هردو خسته نباشید 🤝";
     }
