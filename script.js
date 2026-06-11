@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// ۲. منطق محاسباتی اصلی و صمیمی خود شما (بدون یک کلمه تغییر در پیام‌ها)
+// ۲. منطق محاسباتی اصلی و صمیمی شما
 let abortController = null;
 
 function calculateTime() {
@@ -78,7 +78,7 @@ function calculateTime() {
 
     calculatedTime.innerHTML = `
       17:45
-      <span class="message message-late-info"> خواب موندی یا بازم همون بهونه همیشگی که اسنپ دیر اومد ؟ 😒 </span>
+      <span class="message message-late-info"> خواب موندی یا بازم همون بهونه همیشگی که اسنپ دیر اومد ？ 😒 </span>
       <span class="message message-leave-warning">حالا باید ${delayStr.trim()} مرخصی بگیری</span>
     `;
   }
@@ -183,7 +183,7 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") togglePanic();
 });
 
-// ۴. بخش بازی مخفی (۵ کلیک روی فوتر)
+// ۴. بخش بازی مخفی دوز (۵ کلیک روی فوتر)
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
@@ -193,17 +193,14 @@ function triggerEasterEgg() {
         resetTicTacToe();
     }
 }
-function switchGame(gameName) {
-    if (gameName === 'ticTacToe') {
-        document.getElementById("ticTacToeGame").style.display = "block";
-        document.getElementById("rpsGame").style.display = "none";
-    } else {
-        document.getElementById("ticTacToeGame").style.display = "none";
-        document.getElementById("rpsGame").style.display = "block";
-    }
-}
 
-// --- هوش مصنوعی ارتقایافته دوز (The Snitch) ---
+// الگوهای برد دوز (اینجا تعریف شد تا دوز بدون مشکل کار کند)
+const winPatterns = [
+    [0,1,2], [3,4,5], [6,7,8],
+    [0,3,6], [1,4,7], [2,5,8],
+    [0,4,8], [2,4,6]
+];
+
 let board = ["", "", "", "", "", "", "", "", ""];
 const cells = document.querySelectorAll(".cell");
 cells.forEach(cell => cell.addEventListener("click", handleCellClick));
@@ -227,7 +224,6 @@ function handleCellClick(e) {
 }
 
 function snitchMove() {
-    // هوش استراتژیک دوز
     for (let pattern of winPatterns) {
         let countO = pattern.filter(idx => board[idx] === "O").length;
         let countEmpty = pattern.filter(idx => board[idx] === "").length;
@@ -260,16 +256,4 @@ function resetTicTacToe() {
     board = ["", "", "", "", "", "", "", "", ""];
     cells.forEach(cell => cell.innerText = "");
     document.getElementById("tttStatus").innerText = "نوبت شماست (X)";
-}
-
-// --- سنگ کاغذ قیچی ---
-function playRPS(userChoice) {
-    const choices = ['👊', '✋', '✌️'];
-    const systemChoice = choices[Math.floor(Math.random() * choices.length)];
-    let statusText = `شما: ${userChoice} | سیستم: ${systemChoice} -> `;
-    if (userChoice === systemChoice) statusText += "مساوی! دوباره بزن.";
-    else if ((userChoice === '👊' && systemChoice === '✌️') || (userChoice === '✋' && systemChoice === '👊') || (userChoice === '✌️' && systemChoice === '✋')) {
-        statusText += "بردی! سیستم مغلوب شد 😎";
-    } else statusText += "باختی! سیستم مچت رو خوابوند 🖥️";
-    document.getElementById("rpsStatus").innerText = statusText;
 }
