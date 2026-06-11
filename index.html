@@ -1,206 +1,104 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>ExitTime</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبه ساعت خروج</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="theme-toggle">
-      <label>
-        <input type="checkbox" id="darkModeToggle" /> حالت تاریک
-      </label>
+
+    <!-- دکمه فرار سریع در بالاترین لایه -->
+    <button id="panicBtn" onclick="togglePanic()">وضعیت قرمز! 🚨</button>
+
+    <!-- صفحه اکسل فیک (در حالت عادی مخفی است) -->
+    <div id="excelScreen" onclick="togglePanic()">
+        <div class="excel-toolbar">ترازنامه مالی سه‌ماهه اول - Microsoft Excel (Read-Only)</div>
+        <div class="excel-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>کد کالا</th>
+                        <th>شرح فعالیت</th>
+                        <th>بودجه مصوب (ریال)</th>
+                        <th>هزینه واقعی</th>
+                        <th>انحراف از بودجه</th>
+                        <th>وضعیت عملکرد</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>A-1024</td><td>بهینه‌سازی لود سرورهای مرکزی</td><td>4,500,000,000</td><td>4,250,000,000</td><td>-5.5%</td><td style="color: green;">مطلوب</td></tr>
+                    <tr><td>A-1025</td><td>توسعه فرانت‌اند پنل مدیریت</td><td>1,200,000,000</td><td>1,450,000,000</td><td>+20.8%</td><td style="color: red;">نیازمند بررسی</td></tr>
+                    <tr><td>A-1026</td><td>بازاریابی دیجیتال و SEO</td><td>3,100,000,000</td><td>2,900,000,000</td><td>-6.4%</td><td style="color: green;">مطلوب</td></tr>
+                    <tr><td>A-1027</td><td>امنیت شبکه و تست نفوذ</td><td>2,000,000,000</td><td>2,000,000,000</td><td>0%</td><td>پایدار</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
+    <!-- داشبورد اصلی سایت -->
+    <div class="main-container" id="mainDashboard">
+        
+        <!-- هدر شامل تقویم و آب و هوا -->
+        <div class="dashboard-header">
+            <div class="header-box" id="calendarBox">📅 در حال بارگذاری تاریخ...</div>
+            <div class="header-box" id="weatherBox">☀️ در حال دریافت وضع هوا...</div>
+        </div>
 
-    <div class="input-group">
-      <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
-      <div class="input-wrapper">
-        <input type="number" id="minuteInput" placeholder="دقیقه" />
-        <input type="number" id="hourInput" placeholder="ساعت" />
-      </div>
+        <h1>محاسبه‌گر ساعت خروج</h1>
+        
+        <div class="input-group">
+            <label>ساعت ورود:</label>
+            <div class="time-inputs">
+                <input type="number" id="entryHour" placeholder="ساعت (مثلا 8)" min="0" max="23">
+                <input type="number" id="entryMinute" placeholder="دقیقه (مثلا 30)" min="0" max="59">
+            </div>
+        </div>
+
+        <button class="btn-calc" onclick="calculateExit()">محاسبه ساعت خروج</button>
+
+        <!-- باکس نتایج و تایمر معکوس -->
+        <div id="resultBox" class="result-box">
+            <p id="exitTimeText"></p>
+            <div id="countdownTimer" class="countdown"></div>
+        </div>
+
+        <!-- بخش مخفی بازی (Easter Egg) -->
+        <div id="easterEggZone" class="hidden-zone">
+            <h3>🎮 بازی‌های محرمانه (ضد کلافگی)</h3>
+            <div class="game-selector">
+                <button onclick="switchGame('ticTacToe')">دوز با The Snitch</button>
+                <button onclick="switchGame('rps')">سنگ، کاغذ، قیچی</button>
+            </div>
+
+            <!-- بازی دوز -->
+            <div id="ticTacToeGame" class="game-container">
+                <h4>مسابقه دوز با The Snitch 🕵️‍♂️</h4>
+                <div class="ttt-board" id="tttBoard">
+                    <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+                </div>
+                <p id="tttStatus"></p>
+                <button onclick="resetTicTacToe()">شروع مجدد دوز</button>
+            </div>
+
+            <!-- بازی سنگ کاغذ قیچی -->
+            <div id="rpsGame" class="game-container" style="display:none;">
+                <h4>سنگ، کاغذ، قیچی با سیستم</h4>
+                <div class="rps-buttons">
+                    <button onclick="playRPS('👊')">👊 سنگ</button>
+                    <button onclick="playRPS('✋')">✋ کاغذ</button>
+                    <button onclick="playRPS('✌️')">✌️ قیچی</button>
+                </div>
+                <p id="rpsStatus"></p>
+            </div>
+        </div>
+
+        <!-- فوتر محرک بازی مخفی -->
+        <footer onclick="triggerEasterEgg()">Powered by Mason</footer>
     </div>
 
-    <button onclick="calculateTime()">محاسبه</button>
-
-    <div id="errorBox"></div>
-
-    <div id="result">
-      <span>ساعتی که می‌تونی بری:</span>
-      <br />
-      <span id="calculatedTime"></span>
-    </div>
-
-    <div class="powered-by">Powered by Mason</div>
-  </div>
-
-  <script>
-    let abortController = null;
-
-    function calculateTime() {
-      let hour = parseInt(document.getElementById("hourInput").value);
-      let minute = parseInt(document.getElementById("minuteInput").value);
-      const errorBox = document.getElementById("errorBox");
-      const resultBox = document.getElementById("result");
-      const calculatedTime = document.getElementById("calculatedTime");
-
-      resultBox.classList.remove("show");
-      calculatedTime.innerHTML = "";
-
-      const prevLine = document.getElementById('timeStatusLine');
-      if (prevLine) prevLine.remove();
-
-      const prevWarn = document.getElementById('timeWarningLine');
-      if (prevWarn) prevWarn.remove();
-
-      if (
-        isNaN(hour) ||
-        isNaN(minute) ||
-        hour < 0 ||
-        hour > 23 ||
-        minute < 0 ||
-        minute > 59
-      ) {
-        errorBox.textContent =
-          "یعنی اینقد عجله داری بری که تایم ورودتو اشتباه زدی😄، ساعت باید بین 0 تا 23 و دقیقه بین 0 تا 59 باشه";
-        errorBox.classList.add("show");
-        return;
-      }
-
-      errorBox.classList.remove("show");
-      errorBox.textContent = "";
-
-      let totalInputMinutes = hour * 60 + minute;
-      let workStartLimit = 9 * 60;
-      let earlyBirdLimit = 7 * 60;
-      const pad = (n) => n.toString().padStart(2, "0");
-
-      if (totalInputMinutes < earlyBirdLimit) {
-        let baseMinutes = earlyBirdLimit + 8 * 60 + 45;
-        let finalHour = Math.floor(baseMinutes / 60) % 24;
-        let finalMinute = baseMinutes % 60;
-        calculatedTime.innerHTML = `
-          ${pad(finalHour)}:${pad(finalMinute)}
-          <span class="message message-early">تو که هنوز آفتاب نزده اومدی😨 </span>
-        `;
-      } else if (totalInputMinutes <= workStartLimit) {
-        let totalMinutes = totalInputMinutes + 8 * 60 + 45;
-        let finalHour = Math.floor(totalMinutes / 60) % 24;
-        let finalMinute = totalMinutes % 60;
-        calculatedTime.innerHTML = `${pad(finalHour)}:${pad(finalMinute)}`;
-      } else {
-        let delayMinutes = totalInputMinutes - workStartLimit;
-        let delayHourPart = Math.floor(delayMinutes / 60);
-        let delayMinutePart = delayMinutes % 60;
-
-        let delayStr = "";
-        if (delayHourPart > 0) delayStr += `${delayHourPart} ساعت `;
-        if (delayMinutePart > 0) delayStr += `${delayMinutePart} دقیقه `;
-
-        calculatedTime.innerHTML = `
-          17:45
-          <span class="message message-late-info"> خواب موندی یا بازم همون بهونه همیشگی که اسنپ دیر اومد ؟ 😒 </span>
-          <span class="message message-leave-warning">حالا باید ${delayStr.trim()} مرخصی بگیری</span>
-        `;
-      }
-
-      const tempLine = document.createElement('span');
-      tempLine.textContent = '⏳ در حال بررسی زمان دقیق ...';
-      tempLine.classList.add('message');
-      tempLine.style.marginTop = '10px';
-      tempLine.style.display = 'block';
-      tempLine.style.color = 'hotpink';
-      tempLine.id = 'timeStatusLine';
-      document.getElementById('result').appendChild(tempLine);
-
-      if (abortController) {
-        abortController.abort();
-      }
-      abortController = new AbortController();
-      const signal = abortController.signal;
-
-      const useLocalTime = () => {
-        const now = new Date();
-        handleTimeResult(now, null);
-      };
-
-      const handleTimeResult = (now, globalNow) => {
-        const nowTotalMinutes = now.getHours() * 60 + now.getMinutes();
-        let diff = 0;
-
-        if (totalInputMinutes < earlyBirdLimit) {
-          diff = (earlyBirdLimit + 8 * 60 + 45) - nowTotalMinutes;
-        } else if (totalInputMinutes <= workStartLimit) {
-          diff = (totalInputMinutes + 8 * 60 + 45) - nowTotalMinutes;
-        } else {
-          diff = (17 * 60 + 45) - nowTotalMinutes;
-        }
-
-        if (diff > 0) {
-          const hrs = Math.floor(diff / 60);
-          const mins = diff % 60;
-
-          if (hrs >= 1) {
-            tempLine.textContent = `⏳ ${hrs} ساعت و ${mins} دقیقه دیگه مونده تا بتونی بری خوشگلم 😃`;
-          } else {
-            tempLine.textContent = `⏳ فقط ${mins} دقیقه دیگه مونده تا بری خوشگلم 😎`;
-          }
-        } else {
-          const passed = Math.abs(diff);
-          const hrs = Math.floor(passed / 60);
-          const mins = passed % 60;
-
-          if (hrs >= 1) {
-            tempLine.textContent = `✅ وقت رفتنت ${hrs} ساعت و ${mins} دقیقه پیش بوده، چرا هنوز موندی خوشگلم؟ 🤨`;
-          } else {
-            tempLine.textContent = `✅ وقت رفتنت ${mins} دقیقه پیش بوده خوشگلم! زود جمع کن برو 😅`;
-          }
-        }
-
-        // فقط وقتی اختلاف زمان زیاد بود پیام بده
-        if (globalNow) {
-          const localNow = new Date();
-          const deltaSeconds = Math.abs((globalNow.getTime() - localNow.getTime()) / 1000);
-          if (deltaSeconds > 300) {
-            const warn = document.createElement('div');
-            warn.textContent = "⏰ ساعت سیستمت تنظیم نیستا عزیزم، چکش کن 😉";
-            warn.style.color = 'orange';
-            warn.style.marginTop = '8px';
-            warn.id = 'timeWarningLine';
-            document.getElementById('result').appendChild(warn);
-          }
-        }
-      };
-
-      fetch('https://worldtimeapi.org/api/timezone/Asia/Tehran', { signal })
-        .then(response => response.json())
-        .then(data => {
-          if (abortController.signal.aborted) return;
-          const now = new Date(data.datetime);
-          handleTimeResult(now, now);
-        })
-        .catch(err => {
-          if (err.name === 'AbortError') return;
-          useLocalTime();
-        });
-
-      setTimeout(() => {
-        if (!abortController.signal.aborted) {
-          abortController.abort();
-          useLocalTime();
-        }
-      }, 1000);
-
-      setTimeout(() => {
-        resultBox.classList.add("show");
-      }, 10);
-    }
-
-    document.getElementById("darkModeToggle").addEventListener("change", function () {
-      document.body.classList.toggle("dark-mode", this.checked);
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
