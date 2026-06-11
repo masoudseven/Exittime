@@ -23,13 +23,12 @@ body {
     line-height: 1.8;
 }
 
-/* کانتینر اصلی با گوشه‌های کاملاً گرد و سایه نرم مدرن */
 .container {
     background: var(--panel-bg);
     border-radius: 24px;
     padding: 45px 35px;
     width: 100%;
-    max-width: 460px;
+    max-width: 480px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
 }
@@ -46,19 +45,19 @@ h2 {
     display: flex;
     justify-content: space-between;
     margin-bottom: 35px;
-    gap: 15px;
+    gap: 8px;
 }
 
-/* لبه‌های گرد باکس‌های تاریخ و هوا */
 .header-box {
     background: #f7fafc;
-    padding: 12px;
-    border-radius: 16px;
-    font-size: 0.85rem;
+    padding: 10px 6px;
+    border-radius: 14px;
+    font-size: 0.78rem;
     color: var(--text-muted);
     flex: 1;
     border: 1px solid #edf2f7;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    white-space: nowrap;
 }
 
 .input-group {
@@ -80,7 +79,6 @@ h2 {
     align-items: center;
 }
 
-/* فیلدهای ورودی با لبه‌های کاملاً متمایز و گرد */
 input[type="number"] {
     width: 110px;
     padding: 14px;
@@ -107,7 +105,6 @@ input[type="number"]:focus {
     color: #a0aec0;
 }
 
-/* دکمه محاسبه با گرادیان رنگی پرانرژی و لبه گرد */
 button {
     cursor: pointer;
     border: none;
@@ -130,7 +127,6 @@ button {
     box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
 }
 
-/* استایل باکس خطا و نتیجه */
 #errorBox, #result {
     display: none;
     margin-top: 35px;
@@ -177,7 +173,6 @@ button {
 .message-late-info { color: #6b46c1; }
 .message-leave-warning { color: #b83280; font-weight: bold; }
 
-/* استایل‌های داینامیک تایمر معکوس */
 .countdown-container {
     margin-top: 15px;
     padding: 10px;
@@ -189,10 +184,9 @@ button {
     box-sizing: border-box;
 }
 
-/* رنگ‌های تایمر معکوس */
-.timer-safe { background: #ebf8ff; color: #2b6cb0; }       /* آبی */
-.timer-warning { background: #fffaf0; color: #dd6b20; }    /* نارنجی */
-.timer-critical {                                          /* قرمز چشمک زن */
+.timer-safe { background: #ebf8ff; color: #2b6cb0; }
+.timer-warning { background: #fffaf0; color: #dd6b20; }
+.timer-critical {
     background: #fff5f5; 
     color: #e53e3e; 
     animation: pulse 1s infinite alternate; 
@@ -205,21 +199,6 @@ button {
 
 #errorBox.show, #result.show {
     display: block;
-}
-
-/* تنظیمات لبه گرد دکمه فرار و شیت اکسل */
-#panicBtn {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #4a5568;
-    border: 1px solid #cbd5e0;
-    padding: 8px 14px;
-    font-size: 0.75rem;
-    z-index: 9999;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 #excelScreen {
@@ -240,7 +219,6 @@ table { width: 100%; border-collapse: collapse; }
 th, td { border: 1px solid #bbb; padding: 10px; font-size: 13px; border-radius: 4px; }
 th { background: #f3f3f3; }
 
-/* بخش بازی مخفی */
 .hidden-zone {
     display: none;
     margin-top: 40px;
@@ -258,7 +236,6 @@ th { background: #f3f3f3; }
     margin: 20px auto;
 }
 
-/* لبه‌های کاملاً گرد خانه‌های دوز */
 .cell {
     width: 55px; height: 55px;
     background: #f7fafc;
@@ -278,7 +255,6 @@ th { background: #f3f3f3; }
 }
 .btn-reset:hover { background: #f7fafc; }
 
-/* فوتر شرکتی بولد */
 .powered-by {
     margin-top: 50px;
     font-size: 0.85rem;
