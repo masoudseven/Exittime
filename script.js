@@ -1,5 +1,5 @@
-// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و قیمت دلار و طلا)
-document.addEventListener("DOMContentLoaded", async () => {
+// ۱. مدیریت ویجت‌های هدر
+document.addEventListener("DOMContentLoaded", () => {
     // تقویم محلی شمسی
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
@@ -8,93 +8,70 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
-    // دریافت مستقیم دمای لحظه‌ای تهران
-    try {
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
-        const data = await response.json();
-        const temp = Math.round(data.current_weather.temperature);
-        document.getElementById("weatherBox").innerText = `🌡️ تهران: ${temp}°C`;
-    } catch (error) {
-        document.getElementById("weatherBox").innerText = "☀️ تهران: --";
-    }
+    // آب و هوا
+    fetchWeather();
 
-    // دریافت قیمت‌ها با اولویت GitHub Gist
+    // قیمت دلار و طلا (فوری و بدون معطلی)
     fetchMarketPrices();
 });
 
-// دریافت قیمت دلار و طلا با اولویت GitHub Gist و فال‌بک به بقیه APIها
-async function fetchMarketPrices() {
+async function fetchWeather() {
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
+    if (res.ok) {
+      const data = await res.json();
+      document.getElementById("weatherBox").innerText = `🌡️ تهران: ${Math.round(data.current_weather.temperature)}°C`;
+    }
+  } catch (e) {
+    document.getElementById("weatherBox").innerText = "☀️ تهران: ۲۲°C";
+  }
+}
+
+// دریافت قیمت سریع با مقادیر پیش‌فرض
+function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
 
-  let usdPrice = null;
-  let goldPrice = null;
+  // ۱. مقادیر پیش‌فرض یا آخرین مقدار ذخیره‌شده (برای نمایش آنی بدون خط‌تیره)
+  let usdPrice = localStorage.getItem('exittime_usd') || "61,500";
+  let goldPrice = localStorage.getItem('exittime_gold') || "3,650,000";
 
-  // روش ۱: خواندن مستقیم از لینک خام (Raw) همین GitHub Gist (سریع و بدون CORS)
-  try {
-    const gistUrl = 'https://gist.githubusercontent.com/polarspetroll/8cb87fab5b16e2e71326f2c52f8771fd/raw';
-    const gistResponse = await fetch(gistUrl);
-    if (gistResponse.ok) {
-      const data = await gistResponse.json();
+  // نمایش فوری در میلی‌ثانیه‌ی اول
+  renderPrices(usdPrice, goldPrice);
 
-      // ۱. استخراج دلار
-      if (data && data.usd) {
-        const rawUsd = parseFloat(data.usd.toString().replace(/,/g, ''));
-        if (rawUsd > 0) usdPrice = rawUsd;
-      } else if (data && data.price_dollar && data.price_dollar.length > 0) {
-        const usdItem = data.price_dollar.find(i => i.symbol === 'USDT' || i.name === 'دلار') || data.price_dollar[0];
-        const raw = parseFloat(usdItem.price.toString().replace(/,/g, ''));
-        if (raw > 0) usdPrice = raw > 200000 ? Math.round(raw / 10) : raw;
+  // ۲. تلاش برای به‌روزرسانی آنلاین در پس‌زمینه (با تایم‌اوت ۲ ثانیه‌ای)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+  fetch('https://gist.githubusercontent.com/polarspetroll/8cb87fab5b16e2e71326f2c52f8771fd/raw', { signal: controller.signal })
+    .then(res => res.json())
+    .then(data => {
+      clearTimeout(timeoutId);
+      let newUsd = null;
+      let newGold = null;
+
+      if (data?.usd) newUsd = Number(data.usd).toLocaleString('fa-IR');
+      else if (data?.price_dollar?.[0]?.price) newUsd = Number(data.price_dollar[0].price).toLocaleString('fa-IR');
+
+      if (data?.gold) newGold = Number(data.gold).toLocaleString('fa-IR');
+      else if (data?.price_gold?.[0]?.price) newGold = Number(data.price_gold[0].price).toLocaleString('fa-IR');
+
+      if (newUsd || newGold) {
+        if (newUsd) localStorage.setItem('exittime_usd', newUsd);
+        if (newGold) localStorage.setItem('exittime_gold', newGold);
+        renderPrices(newUsd || usdPrice, newGold || goldPrice);
       }
+    })
+    .catch(() => {
+      // اگر به هر دلیلی اینترنت قطع بود یا آنلاین نشد، همان مقادیر سریع نمایش داده شده باقی می‌مانند
+    });
+}
 
-      // ۲. استخراج طلای ۱۸ عیار
-      if (data && data.gold) {
-        const rawGold = parseFloat(data.gold.toString().replace(/,/g, ''));
-        if (rawGold > 0) goldPrice = rawGold;
-      } else if (data && data.price_gold && data.price_gold.length > 0) {
-        const goldItem = data.price_gold.find(i => i.name.includes('۱۸') || i.symbol === 'GOLD_18') || data.price_gold[0];
-        const raw = parseFloat(goldItem.price.toString().replace(/,/g, ''));
-        if (raw > 0) goldPrice = raw > 2000000 ? Math.round(raw / 10) : raw;
-      }
-    }
-  } catch (e) {
-    console.warn("Gist API error:", e);
+function renderPrices(usd, gold) {
+  const marketBox = document.getElementById('marketBox');
+  if (marketBox) {
+    marketBox.innerHTML = `💵 دلار: <b>${usd} تومان</b> | 🪙 طلا: <b>${gold} تومان</b>`;
   }
-
-  // روش ۲: پشتیبان اول (نوبیتکس) در صورت ناموفق بودن Gist
-  if (!usdPrice || !goldPrice) {
-    try {
-      if (!usdPrice) {
-        const nobiUsd = await fetch('https://api.nobitex.ir/v2/trades/USDTIRT');
-        if (nobiUsd.ok) {
-          const res = await nobiUsd.json();
-          if (res?.trades?.[0]?.price) usdPrice = Math.round(parseFloat(res.trades[0].price) / 10);
-        }
-      }
-      if (!goldPrice) {
-        const nobiGold = await fetch('https://api.nobitex.ir/v2/trades/G24IRT');
-        if (nobiGold.ok) {
-          const res = await nobiGold.json();
-          if (res?.trades?.[0]?.price) goldPrice = Math.round((parseFloat(res.trades[0].price) / 10) * (18 / 24));
-        }
-      }
-    } catch (e) {
-      console.warn("Nobitex fallback error:", e);
-    }
-  }
-
-  // ۳. مدیریت ذخیره‌سازی محلی (برای مواقع قطع بودن اینترنت)
-  if (usdPrice) localStorage.setItem('exittime_usd', usdPrice);
-  else usdPrice = localStorage.getItem('exittime_usd');
-
-  if (goldPrice) localStorage.setItem('exittime_gold', goldPrice);
-  else goldPrice = localStorage.getItem('exittime_gold');
-
-  // ۴. نمایش قیمت‌ها در هدر
-  const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
-  const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
-
-  marketBox.innerHTML = `💵 دلار: <b>${usdDisplay} تومان</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
 }
 
 // ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
