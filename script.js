@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا به‌صورت زنده و بدون کش
+    // دریافت قیمت دلار و طلا مستقیماً از BRS API
     fetchMarketPrices();
 });
 
-// تابع هوشمند دریافت قیمت لحظه‌ای دلار و طلای ۱۸ عیار بدون کش مرورگر
+// تابع اختصاصی خواندن قیمت‌ها از BRS API (brsapi.ir)
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,64 +30,56 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  // ایجاد یک کلید زمان برای دور زدن کش مرورگر (Cache Buster)
-  const timestamp = new Date().getTime();
-
-  // تلاش ۱: دریافت از BRS API با زمان لحظه‌ای
   try {
-    const response = await fetch(`https://brsapi.ir/FreeTether/api/?nocache=${timestamp}`);
+    // فراخوانی مستقیم API رسمی BRS
+    const response = await fetch('https://brsapi.ir/FreeTether/api/');
     const data = await response.json();
 
-    if (data && data.gold && data.gold[0]?.price > 0) {
-      goldPrice = Math.round(data.gold[0].price / 10); // تبدیل ریال به تومان
-    }
-    if (data && data.currency && data.currency[0]?.price > 0) {
-      usdPrice = Math.round(data.currency[0].price / 10);
-    }
-  } catch (error) {
-    console.warn("خطا در منبع اول، تلاش برای دریافت از سرویس دوم...");
-  }
-
-  // تلاش ۲: اگر دلار دریافت نشد، دریافت نرخ زنده ۲۴ ساعته تتر/دلار از Nobitex
-  if (!usdPrice) {
-    try {
-      const response = await fetch(`https://api.nobitex.ir/v2/orderbook/USDTIRT?t=${timestamp}`);
-      const data = await response.json();
-      if (data && data.lastTradePrice) {
-        usdPrice = Math.round(parseInt(data.lastTradePrice) / 10);
+    // ۱. استخراج قیمت دلار/تتر (تبدیل ریال به تومان)
+    if (data && data.currency && data.currency.length > 0) {
+      const usdItem = data.currency.find(item => item.symbol === 'USDT' || item.name_en === 'USDT' || item.name_fa === 'دلار');
+      if (usdItem && usdItem.price > 0) {
+        usdPrice = Math.round(usdItem.price / 10);
+      } else if (data.currency[0]?.price > 0) {
+        usdPrice = Math.round(data.currency[0].price / 10);
       }
-    } catch (error) {
-      console.warn("خطا در منبع دوم دلار.");
     }
+
+    // ۲. استخراج قیمت طلای ۱۸ عیار (تبدیل ریال به تومان)
+    if (data && data.gold && data.gold.length > 0) {
+      const goldItem = data.gold.find(item => item.name_fa.includes('۱۸') || item.symbol === 'GOLD_18');
+      if (goldItem && goldItem.price > 0) {
+        goldPrice = Math.round(goldItem.price / 10);
+      } else if (data.gold[0]?.price > 0) {
+        goldPrice = Math.round(data.gold[0].price / 10);
+      }
+    }
+
+  } catch (error) {
+    console.warn("خطا در دریافت داده‌ها از BRS API:", error);
   }
 
-  // تلاش ۳: اگر طلا هنوز دریافت نشده باشد، محاسبه بر اساس مظنه زنده دلار
-  if (!goldPrice && usdPrice) {
-    // فرمول برآورد تقریبی قیمت گرم طلای ۱۸ عیار بر اساس دلار روز
-    goldPrice = Math.round((usdPrice * 2650 * 0.75) / 31.1035);
-  }
-
-  // ذخیره آخرین نرخ در حافظه مرورگر در صورت قطع شدن کامل شبکه
+  // ۳. اگر به هر دلیلی شبکه قطع بود، استفاده از آخرین نرخ موفق ذخیره‌شده
   if (usdPrice) {
-    localStorage.setItem('last_usd_price', usdPrice);
+    localStorage.setItem('brs_usd_price', usdPrice);
   } else {
-    usdPrice = localStorage.getItem('last_usd_price');
+    usdPrice = localStorage.getItem('brs_usd_price');
   }
 
   if (goldPrice) {
-    localStorage.setItem('last_gold_price', goldPrice);
+    localStorage.setItem('brs_gold_price', goldPrice);
   } else {
-    goldPrice = localStorage.getItem('last_gold_price');
+    goldPrice = localStorage.getItem('brs_gold_price');
   }
 
-  // نمایش نهایی قیمت‌های بروزرسانی شده
+  // ۴. نمایش نهایی قیمت‌ها در هدر
   if (usdPrice || goldPrice) {
     const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
     const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
     
     marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
   } else {
-    marketBox.innerText = "💵 بازار: در حال به‌روزرسانی...";
+    marketBox.innerText = "💵 بازار: در حال دریافت قیمت...";
   }
 }
 
