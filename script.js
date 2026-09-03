@@ -1,10 +1,10 @@
 // ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و بازار دلار و طلا)
 document.addEventListener("DOMContentLoaded", async () => {
-    // تقویم محلی شمسی (پنجشنبه ۲۱ خرداد)
+    // تقویم محلی شمسی
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
-    // تقویم میلادی هم‌فرمت (Thursday, June 11)
+    // تقویم میلادی
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا با سیستم پشتیبان و حافظه مرورگر
+    // دریافت قیمت دلار و طلا مانند اپلیکیشن‌های زنده نرخ ارز
     fetchMarketPrices();
 });
 
-// تابع هوشمند دریافت و نمایش قیمت دلار و طلای ۱۸ عیار
+// تابع هوشمند دریافت قیمت دلار (تتر ۲۴ ساعته) و طلای ۱۸ عیار
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,35 +30,35 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  // ۱. تلاش برای دریافت از API اول (BRS API)
+  // ۱. دریافت نرخ دلار/تتر (۲۴ ساعته از بازار زنده صرافی)
+  try {
+    const response = await fetch('https://api.nobitex.ir/v2/orderbook/USDTIRT');
+    const data = await response.json();
+    if (data && data.lastTradePrice) {
+      usdPrice = Math.round(data.lastTradePrice / 10); // تبدیل ریال به تومان
+    }
+  } catch (error) {
+    console.warn("خطا در دریافت نرخ زنده دلار/تتر");
+  }
+
+  // ۲. دریافت نرخ طلای ۱۸ عیار
   try {
     const response = await fetch('https://brsapi.ir/FreeTether/api/');
     const data = await response.json();
 
-    if (data && data.currency && data.currency[0]?.price > 0) {
+    if (data && data.gold && data.gold[0]?.price > 0) {
+      goldPrice = Math.round(data.gold[0].price / 10); // تبدیل ریال به تومان
+    }
+    
+    // اگر دلار از منبع اول نگرفته بود، از این API پشتیبان می‌گیرد
+    if (!usdPrice && data && data.currency && data.currency[0]?.price > 0) {
       usdPrice = Math.round(data.currency[0].price / 10);
     }
-    if (data && data.gold && data.gold[0]?.price > 0) {
-      goldPrice = Math.round(data.gold[0].price / 10);
-    }
   } catch (error) {
-    console.warn("منبع اصلی بازار در دسترس نیست، تلاش برای منبع پشتیبان...");
+    console.warn("خطا در دریافت نرخ طلا");
   }
 
-  // ۲. منبع پشتیبان ۲۴ ساعته برای دلار (Nobitex API) در صورت عدم پاسخ منبع اول
-  if (!usdPrice) {
-    try {
-      const response = await fetch('https://api.nobitex.ir/v2/orderbook/USDTIRT');
-      const data = await response.json();
-      if (data && data.lastTradePrice) {
-        usdPrice = Math.round(data.lastTradePrice / 10);
-      }
-    } catch (error) {
-      console.warn("منبع پشتیبان دلار هم در دسترس نیست.");
-    }
-  }
-
-  // ۳. ذخیره‌سازی یا بازیابی از حافظه مرورگر (localStorage)
+  // ۳. حفظ آخرین نرخ معتبر در حافظه مرورگر برای زمان‌های قطعی کامل API
   if (usdPrice) {
     localStorage.setItem('last_usd_price', usdPrice);
   } else {
@@ -71,7 +71,7 @@ async function fetchMarketPrices() {
     goldPrice = localStorage.getItem('last_gold_price');
   }
 
-  // ۴. نمایش نهایی در ویجت
+  // ۴. نمایش نهایی در ویجت هدر
   if (usdPrice || goldPrice) {
     const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
     const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
@@ -301,7 +301,7 @@ function triggerEasterEgg() {
         document.getElementById("easterEggZone").style.display = "block";
         document.getElementById("easterEggZone").scrollIntoView({ behavior: 'smooth' });
         resetTicTacToe();
-        clickCount = 0; // ریست تعداد کلیک
+        clickCount = 0;
     }
 }
 
@@ -359,9 +359,11 @@ function makeMove(index) {
         document.getElementById("tttStatus").innerText = "مساوی شد! هردو خسته نباشید 🤝";
     }
 }
+
 function checkWin(b, player) {
     return winPatterns.some(pattern => pattern.every(idx => b[idx] === player));
 }
+
 function resetTicTacToe() {
     board = ["", "", "", "", "", "", "", "", ""];
     cells.forEach(cell => cell.innerText = "");
