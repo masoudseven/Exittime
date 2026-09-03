@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    localStorage.removeItem('exittime_usd');
-    localStorage.removeItem('exittime_gold');
-
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
