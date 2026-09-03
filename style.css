@@ -254,7 +254,7 @@ button {
 }
 .btn-reset:hover { background: #f7fafc; }
 
-.powered-by 
+.powered-by {
     margin-top: 50px;
     font-size: 0.85rem;
     color: var(--text-muted);
