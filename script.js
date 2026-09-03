@@ -1,4 +1,4 @@
-// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و نرخ دلار و طلا)
+// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و قیمت دلار و طلا)
 document.addEventListener("DOMContentLoaded", async () => {
     // تقویم محلی شمسی
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت نرخ دلار و طلا مستقیماً از BRS API با مکانیسم هوشمند
+    // دریافت مستقیم و بدون CORS قیمت دلار و طلا
     fetchMarketPrices();
 });
 
-// تابع اختصاصی دریافت قیمت‌ها با سیستم فال‌بک (پشتیبان) چندلایه
+// دریافت قیمت دلار و طلا با اولویت BRS و فال‌بک سریع به نوبیتکس (پایدار و بدون CORS)
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,83 +30,73 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  // لیست آدرس‌ها برای دور زدن محدودیت CORS و قطعی پروکسی‌ها
-  const targetUrl = 'https://brsapi.ir/FreeTether/api/';
-  const urlsToTry = [
-    targetUrl, // تلاش مستقیم اولیه
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`, // پروکسی اول
-    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}` // پروکسی دوم
-  ];
+  // روش ۱: تلاش برای دریافت از Nobitex (بسیار سریع و بدون مشکل CORS)
+  try {
+    const response = await fetch('https://api.nobitex.ir/v2/trades/USDTIRT');
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.trades && data.trades.length > 0) {
+        const latestTrade = parseFloat(data.trades[0].price);
+        if (latestTrade > 0) {
+          usdPrice = Math.round(latestTrade / 10); // تبدیل ریال به تومان
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Nobitex API error:", e);
+  }
 
-  let data = null;
+  // روش ۲: دریافت قیمت طلای ۱۸ عیار از API مکمل / پشتیبان
+  try {
+    const goldResponse = await fetch('https://api.nobitex.ir/v2/trades/G24IRT');
+    if (goldResponse.ok) {
+      const goldData = await goldResponse.json();
+      if (goldData && goldData.trades && goldData.trades.length > 0) {
+        const latestGold = parseFloat(goldData.trades[0].price);
+        if (latestGold > 0) {
+          // تبدیل عیار و تبدیل ریال به تومان
+          goldPrice = Math.round((latestGold / 10) * (18 / 24));
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Gold API error:", e);
+  }
 
-  for (const url of urlsToTry) {
+  // روش ۳: تلاش با پروکسی آماده BRS اگر روش‌های بالا کامل نشدند
+  if (!usdPrice || !goldPrice) {
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000); // تایم‌اوت ۴ ثانیه‌ای
+      const brsRes = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://brsapi.ir/FreeTether/api/'));
+      if (brsRes.ok) {
+        const wrapper = await brsRes.json();
+        const data = JSON.parse(wrapper.contents);
 
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        data = await response.json();
-        if (data && (data.price_dollar || data.price_gold)) {
-          break; // دریافت موفقیت‌آمیز داده‌ها
+        if (!usdPrice && data?.price_dollar?.length > 0) {
+          const raw = parseFloat(data.price_dollar[0].price.toString().replace(/,/g, ''));
+          if (raw > 0) usdPrice = Math.round(raw / 10);
+        }
+        if (!goldPrice && data?.price_gold?.length > 0) {
+          const raw = parseFloat(data.price_gold[0].price.toString().replace(/,/g, ''));
+          if (raw > 0) goldPrice = Math.round(raw / 10);
         }
       }
     } catch (e) {
-      // در صورت خطا، رفتن به لینک پروکسی بعدی
-      continue;
+      console.warn("BRS Proxy failed:", e);
     }
   }
 
-  // پردازش داده‌های دریافتی
-  if (data) {
-    // ۱. استخراج قیمت دلار/تتر (تبدیل ریال به تومان)
-    if (data.price_dollar && data.price_dollar.length > 0) {
-      const usdItem = data.price_dollar.find(item => item.symbol === 'USDT' || item.name === 'دلار');
-      const itemToUse = usdItem || data.price_dollar[0];
-      
-      if (itemToUse && itemToUse.price) {
-        const rawPrice = parseFloat(itemToUse.price.toString().replace(/,/g, ''));
-        if (rawPrice > 0) usdPrice = Math.round(rawPrice / 10);
-      }
-    }
+  // ۴. مدیریت ذخیره‌سازی محلی (پشتیبانی آفلاین)
+  if (usdPrice) localStorage.setItem('exittime_usd', usdPrice);
+  else usdPrice = localStorage.getItem('exittime_usd');
 
-    // ۲. استخراج قیمت طلای ۱۸ عیار (تبدیل ریال به تومان)
-    if (data.price_gold && data.price_gold.length > 0) {
-      const goldItem = data.price_gold.find(item => item.name.includes('۱۸') || item.symbol === 'GOLD_18');
-      const itemToUse = goldItem || data.price_gold[0];
+  if (goldPrice) localStorage.setItem('exittime_gold', goldPrice);
+  else goldPrice = localStorage.getItem('exittime_gold');
 
-      if (itemToUse && itemToUse.price) {
-        const rawPrice = parseFloat(itemToUse.price.toString().replace(/,/g, ''));
-        if (rawPrice > 0) goldPrice = Math.round(rawPrice / 10);
-      }
-    }
-  }
+  // ۵. نمایش نهایی قیمت‌ها
+  const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
+  const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
 
-  // ۳. ذخیره‌سازی یا بازیابی از LocalStorage (جهت نمایش آفلاین)
-  if (usdPrice) {
-    localStorage.setItem('brs_usd_price', usdPrice);
-  } else {
-    usdPrice = localStorage.getItem('brs_usd_price');
-  }
-
-  if (goldPrice) {
-    localStorage.setItem('brs_gold_price', goldPrice);
-  } else {
-    goldPrice = localStorage.getItem('brs_gold_price');
-  }
-
-  // ۴. نمایش نهایی (بدون کلمه "بازار")
-  if (usdPrice || goldPrice) {
-    const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
-    const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
-    
-    marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
-  } else {
-    marketBox.innerHTML = `💵 دلار: <b>---</b> | 🪙 طلا: <b>---</b>`;
-  }
+  marketBox.innerHTML = `💵 دلار: <b>${usdDisplay} تومان</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
 }
 
 // ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
