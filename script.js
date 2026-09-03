@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت مستقیم و بدون CORS قیمت دلار و طلا
+    // دریافت قیمت‌ها با اولویت GitHub Gist
     fetchMarketPrices();
 });
 
-// دریافت قیمت دلار و طلا با اولویت BRS و فال‌بک سریع به نوبیتکس (پایدار و بدون CORS)
+// دریافت قیمت دلار و طلا با اولویت GitHub Gist و فال‌بک به بقیه APIها
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,69 +30,67 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  // روش ۱: تلاش برای دریافت از Nobitex (بسیار سریع و بدون مشکل CORS)
+  // روش ۱: خواندن مستقیم از لینک خام (Raw) همین GitHub Gist (سریع و بدون CORS)
   try {
-    const response = await fetch('https://api.nobitex.ir/v2/trades/USDTIRT');
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data.trades && data.trades.length > 0) {
-        const latestTrade = parseFloat(data.trades[0].price);
-        if (latestTrade > 0) {
-          usdPrice = Math.round(latestTrade / 10); // تبدیل ریال به تومان
-        }
+    const gistUrl = 'https://gist.githubusercontent.com/polarspetroll/8cb87fab5b16e2e71326f2c52f8771fd/raw';
+    const gistResponse = await fetch(gistUrl);
+    if (gistResponse.ok) {
+      const data = await gistResponse.json();
+
+      // ۱. استخراج دلار
+      if (data && data.usd) {
+        const rawUsd = parseFloat(data.usd.toString().replace(/,/g, ''));
+        if (rawUsd > 0) usdPrice = rawUsd;
+      } else if (data && data.price_dollar && data.price_dollar.length > 0) {
+        const usdItem = data.price_dollar.find(i => i.symbol === 'USDT' || i.name === 'دلار') || data.price_dollar[0];
+        const raw = parseFloat(usdItem.price.toString().replace(/,/g, ''));
+        if (raw > 0) usdPrice = raw > 200000 ? Math.round(raw / 10) : raw;
+      }
+
+      // ۲. استخراج طلای ۱۸ عیار
+      if (data && data.gold) {
+        const rawGold = parseFloat(data.gold.toString().replace(/,/g, ''));
+        if (rawGold > 0) goldPrice = rawGold;
+      } else if (data && data.price_gold && data.price_gold.length > 0) {
+        const goldItem = data.price_gold.find(i => i.name.includes('۱۸') || i.symbol === 'GOLD_18') || data.price_gold[0];
+        const raw = parseFloat(goldItem.price.toString().replace(/,/g, ''));
+        if (raw > 0) goldPrice = raw > 2000000 ? Math.round(raw / 10) : raw;
       }
     }
   } catch (e) {
-    console.warn("Nobitex API error:", e);
+    console.warn("Gist API error:", e);
   }
 
-  // روش ۲: دریافت قیمت طلای ۱۸ عیار از API مکمل / پشتیبان
-  try {
-    const goldResponse = await fetch('https://api.nobitex.ir/v2/trades/G24IRT');
-    if (goldResponse.ok) {
-      const goldData = await goldResponse.json();
-      if (goldData && goldData.trades && goldData.trades.length > 0) {
-        const latestGold = parseFloat(goldData.trades[0].price);
-        if (latestGold > 0) {
-          // تبدیل عیار و تبدیل ریال به تومان
-          goldPrice = Math.round((latestGold / 10) * (18 / 24));
-        }
-      }
-    }
-  } catch (e) {
-    console.warn("Gold API error:", e);
-  }
-
-  // روش ۳: تلاش با پروکسی آماده BRS اگر روش‌های بالا کامل نشدند
+  // روش ۲: پشتیبان اول (نوبیتکس) در صورت ناموفق بودن Gist
   if (!usdPrice || !goldPrice) {
     try {
-      const brsRes = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://brsapi.ir/FreeTether/api/'));
-      if (brsRes.ok) {
-        const wrapper = await brsRes.json();
-        const data = JSON.parse(wrapper.contents);
-
-        if (!usdPrice && data?.price_dollar?.length > 0) {
-          const raw = parseFloat(data.price_dollar[0].price.toString().replace(/,/g, ''));
-          if (raw > 0) usdPrice = Math.round(raw / 10);
+      if (!usdPrice) {
+        const nobiUsd = await fetch('https://api.nobitex.ir/v2/trades/USDTIRT');
+        if (nobiUsd.ok) {
+          const res = await nobiUsd.json();
+          if (res?.trades?.[0]?.price) usdPrice = Math.round(parseFloat(res.trades[0].price) / 10);
         }
-        if (!goldPrice && data?.price_gold?.length > 0) {
-          const raw = parseFloat(data.price_gold[0].price.toString().replace(/,/g, ''));
-          if (raw > 0) goldPrice = Math.round(raw / 10);
+      }
+      if (!goldPrice) {
+        const nobiGold = await fetch('https://api.nobitex.ir/v2/trades/G24IRT');
+        if (nobiGold.ok) {
+          const res = await nobiGold.json();
+          if (res?.trades?.[0]?.price) goldPrice = Math.round((parseFloat(res.trades[0].price) / 10) * (18 / 24));
         }
       }
     } catch (e) {
-      console.warn("BRS Proxy failed:", e);
+      console.warn("Nobitex fallback error:", e);
     }
   }
 
-  // ۴. مدیریت ذخیره‌سازی محلی (پشتیبانی آفلاین)
+  // ۳. مدیریت ذخیره‌سازی محلی (برای مواقع قطع بودن اینترنت)
   if (usdPrice) localStorage.setItem('exittime_usd', usdPrice);
   else usdPrice = localStorage.getItem('exittime_usd');
 
   if (goldPrice) localStorage.setItem('exittime_gold', goldPrice);
   else goldPrice = localStorage.getItem('exittime_gold');
 
-  // ۵. نمایش نهایی قیمت‌ها
+  // ۴. نمایش قیمت‌ها در هدر
   const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
   const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
 
