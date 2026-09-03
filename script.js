@@ -1,17 +1,14 @@
-// ۱. مدیریت ویجت‌های هدر
 document.addEventListener("DOMContentLoaded", () => {
-    // تقویم محلی شمسی
+    localStorage.removeItem('exittime_usd');
+    localStorage.removeItem('exittime_gold');
+
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("calendarBox").innerText = "📅 " + new Date().toLocaleDateString('fa-IR', shamsiOptions);
     
-    // تقویم میلادی
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
-    // آب و هوا
     fetchWeather();
-
-    // قیمت دلار و طلا
     fetchMarketPrices();
 });
 
@@ -32,8 +29,8 @@ async function fetchWeather() {
 }
 
 function fetchMarketPrices() {
-  let usdPrice = localStorage.getItem('exittime_usd') || "92,500";
-  let goldPrice = localStorage.getItem('exittime_gold') || "6,850,000";
+  let usdPrice = "92,500";
+  let goldPrice = "6,850,000";
 
   renderPrices(usdPrice, goldPrice);
 
@@ -57,24 +54,24 @@ function fetchMarketPrices() {
         if (goldData?.price) newGold = Number(goldData.price).toLocaleString('fa-IR');
       }
 
-      if (newUsd || newGold) {
-        if (newUsd) localStorage.setItem('exittime_usd', newUsd);
-        if (newGold) localStorage.setItem('exittime_gold', newGold);
-        renderPrices(newUsd || usdPrice, newGold || goldPrice);
-      }
+      renderPrices(newUsd || usdPrice, newGold || goldPrice);
     })
-    .catch(() => {});
+    .catch(() => {
+      renderPrices(usdPrice, goldPrice);
+    });
 }
 
 function renderPrices(usd, gold) {
   const usdBox = document.getElementById('usdBox');
   const goldBox = document.getElementById('goldBox');
 
-  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd} تومان</b>`;
-  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold} تومان</b>`;
+  let cleanUsd = String(usd).replace(/تومان/g, '').trim();
+  let cleanGold = String(gold).replace(/تومان/g, '').trim();
+
+  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${cleanUsd} تومان</b>`;
+  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${cleanGold} تومان</b>`;
 }
 
-// ۲. محاسبات زمان خروج
 let abortController = null;
 let countdownInterval = null;
 
@@ -285,7 +282,6 @@ function setupLiveCountdown(exitH, exitM) {
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
-// ۳. بازی دوز
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
