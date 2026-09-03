@@ -70,13 +70,6 @@ h2 {
     font-weight: 700;
 }
 
-.header-box .unit-text {
-    font-size: 0.68rem;
-    color: #a0aec0;
-    font-weight: normal;
-    margin-right: 2px;
-}
-
 .input-group {
     margin-bottom: 35px;
 }
@@ -253,11 +246,3 @@ button {
     font-weight: 600;
 }
 .btn-reset:hover { background: #f7fafc; }
-
-.powered-by {
-    margin-top: 50px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    user-select: none;
-}
