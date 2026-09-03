@@ -77,8 +77,8 @@ function renderPrices(usd, gold) {
   const usdBox = document.getElementById('usdBox');
   const goldBox = document.getElementById('goldBox');
 
-  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd}</b>`;
-  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold}</b>`;
+  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd}</b> <span class="unit-text">تومان</span>`;
+  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold}</b> <span class="unit-text">تومان</span>`;
 }
 
 // ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
