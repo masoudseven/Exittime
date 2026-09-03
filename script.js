@@ -1,4 +1,4 @@
-// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی و آب و هوا)
+// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و بازار دلار و طلا)
 document.addEventListener("DOMContentLoaded", async () => {
     // تقویم محلی شمسی (پنجشنبه ۲۱ خرداد)
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -17,7 +17,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
+
+    // دریافت قیمت دلار و طلا (به تومان)
+    fetchMarketPrices();
 });
+
+// تابع دریافت و نمایش قیمت دلار و طلای ۱۸ عیار
+async function fetchMarketPrices() {
+  const marketBox = document.getElementById('marketBox');
+  if (!marketBox) return;
+
+  try {
+    const response = await fetch('https://brsapi.ir/FreeTether/api/');
+    const data = await response.json();
+
+    if (data && data.currency && data.gold) {
+      // مبالغ API به ریال هستند؛ تقسیم بر ۱۰ بر حسب تومان محاسبه می‌شوند
+      const usdInToman = Math.round(data.currency[0].price / 10).toLocaleString('fa-IR');
+      const goldInToman = Math.round(data.gold[0].price / 10).toLocaleString('fa-IR');
+
+      marketBox.innerHTML = `💵 دلار: <b>${usdInToman}</b> | 🪙 طلا: <b>${goldInToman} تومان</b>`;
+    } else {
+      marketBox.innerText = "💵 بازار: در حال به‌روزرسانی...";
+    }
+  } catch (error) {
+    marketBox.innerText = "💵 بازار: غیرفعال";
+  }
+}
 
 // ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
 let abortController = null;
