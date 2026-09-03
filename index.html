@@ -1,66 +1,60 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExitTime</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>زمان خروج - ExitTime</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <div class="container" id="mainDashboard">
-    
-    <div class="dashboard-header">
-      <div class="header-box" id="calendarBox">📅 شمسی...</div>
-      <div class="header-box" id="gregorianTimeBox">🌐 میلادی...</div>
-      <div class="header-box" id="weatherBox">☀️ وضعیت هوا...</div>
-      <div class="header-box" id="usdBox">💵 دلار...</div>
-      <div class="header-box" id="goldBox">🪙 طلا...</div>
-    </div>
-
-    <h2>محاسبه‌گر تایم خروج از شرکت</h2>
-
-    <div class="input-group">
-      <label class="input-label">تایم ورودتو وارد کن خوشگلم</label>
-      <div class="input-wrapper">
-        <input type="number" id="minuteInput" placeholder="دقیقه" min="0" max="59" />
-        <span class="time-separator">:</span>
-        <input type="number" id="hourInput" placeholder="ساعت" min="0" max="23" />
-      </div>
-    </div>
-
-    <button class="btn-calc" onclick="calculateTime()">محاسبه زمان خروج</button>
-
-    <div id="errorBox"></div>
-
-    <div id="result">
-      <span class="result-title">ساعتی که می‌تونی بری:</span>
-      <span id="calculatedTime"></span>
-      <div id="countdownBox" class="countdown-container"></div>
-    </div>
-
-    <div id="easterEggZone" class="hidden-zone">
-      <h3>The Gossiper 🕵️‍♂️</h3>
-      <div id="ticTacToeGame" class="game-container">
-        <div class="ttt-board" id="tttBoard">
-          <div class="cell" data-index="0"></div>
-          <div class="cell" data-index="1"></div>
-          <div class="cell" data-index="2"></div>
-          <div class="cell" data-index="3"></div>
-          <div class="cell" data-index="4"></div>
-          <div class="cell" data-index="5"></div>
-          <div class="cell" data-index="6"></div>
-          <div class="cell" data-index="7"></div>
-          <div class="cell" data-index="8"></div>
+    <div class="container">
+        <div class="dashboard-header">
+            <div id="calendarBox" class="header-box">📅 در حال دریافت...</div>
+            <div id="gregorianTimeBox" class="header-box">🌐 در حال دریافت...</div>
+            <div id="weatherBox" class="header-box">🌡️ در حال دریافت...</div>
+            <div id="usdBox" class="header-box">💵 دلار: <b>در حال دریافت... تومان</b></div>
+            <div id="goldBox" class="header-box">🪙 طلا: <b>در حال دریافت... تومان</b></div>
         </div>
-        <p id="tttStatus"></p>
-        <button onclick="resetTicTacToe()" class="btn-reset">بازنشانی صفحه بازی</button>
-      </div>
+
+        <h2>محاسبه زمان خروج از شرکت ⏰</h2>
+
+        <div class="input-group">
+            <label class="input-label">ساعت ورودت رو وارد کن:</label>
+            <div class="input-wrapper">
+                <input type="number" id="hourInput" placeholder="ساعت" min="0" max="23">
+                <span class="time-separator">:</span>
+                <input type="number" id="minuteInput" placeholder="دقیقه" min="0" max="59">
+            </div>
+        </div>
+
+        <button class="btn-calc" onclick="calculateTime()">محاسبه زمان خروج</button>
+
+        <div id="errorBox"></div>
+
+        <div id="result">
+            <span class="result-title">ساعت خروجت:</span>
+            <span id="calculatedTime"></span>
+            <div id="countdownBox"></div>
+        </div>
+
+        <div id="easterEggZone" class="hidden-zone">
+            <h3>بازی دوز با The Gossiper 🤫</h3>
+            <div id="tttStatus">نوبت شماست (X)</div>
+            <div class="ttt-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <button class="btn-reset" onclick="resetTicTacToe()">شروع مجدد</button>
+        </div>
     </div>
 
-    <div class="powered-by" onclick="triggerEasterEgg()"><strong>Powered by Mason</strong></div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
