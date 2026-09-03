@@ -18,30 +18,67 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا (به تومان)
+    // دریافت قیمت دلار و طلا با سیستم پشتیبان و حافظه مرورگر
     fetchMarketPrices();
 });
 
-// تابع دریافت و نمایش قیمت دلار و طلای ۱۸ عیار
+// تابع هوشمند دریافت و نمایش قیمت دلار و طلای ۱۸ عیار
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
 
+  let usdPrice = null;
+  let goldPrice = null;
+
+  // ۱. تلاش برای دریافت از API اول (BRS API)
   try {
     const response = await fetch('https://brsapi.ir/FreeTether/api/');
     const data = await response.json();
 
-    if (data && data.currency && data.gold) {
-      // مبالغ API به ریال هستند؛ تقسیم بر ۱۰ بر حسب تومان محاسبه می‌شوند
-      const usdInToman = Math.round(data.currency[0].price / 10).toLocaleString('fa-IR');
-      const goldInToman = Math.round(data.gold[0].price / 10).toLocaleString('fa-IR');
-
-      marketBox.innerHTML = `💵 دلار: <b>${usdInToman}</b> | 🪙 طلا: <b>${goldInToman} تومان</b>`;
-    } else {
-      marketBox.innerText = "💵 بازار: در حال به‌روزرسانی...";
+    if (data && data.currency && data.currency[0]?.price > 0) {
+      usdPrice = Math.round(data.currency[0].price / 10);
+    }
+    if (data && data.gold && data.gold[0]?.price > 0) {
+      goldPrice = Math.round(data.gold[0].price / 10);
     }
   } catch (error) {
-    marketBox.innerText = "💵 بازار: غیرفعال";
+    console.warn("منبع اصلی بازار در دسترس نیست، تلاش برای منبع پشتیبان...");
+  }
+
+  // ۲. منبع پشتیبان ۲۴ ساعته برای دلار (Nobitex API) در صورت عدم پاسخ منبع اول
+  if (!usdPrice) {
+    try {
+      const response = await fetch('https://api.nobitex.ir/v2/orderbook/USDTIRT');
+      const data = await response.json();
+      if (data && data.lastTradePrice) {
+        usdPrice = Math.round(data.lastTradePrice / 10);
+      }
+    } catch (error) {
+      console.warn("منبع پشتیبان دلار هم در دسترس نیست.");
+    }
+  }
+
+  // ۳. ذخیره‌سازی یا بازیابی از حافظه مرورگر (localStorage)
+  if (usdPrice) {
+    localStorage.setItem('last_usd_price', usdPrice);
+  } else {
+    usdPrice = localStorage.getItem('last_usd_price');
+  }
+
+  if (goldPrice) {
+    localStorage.setItem('last_gold_price', goldPrice);
+  } else {
+    goldPrice = localStorage.getItem('last_gold_price');
+  }
+
+  // ۴. نمایش نهایی در ویجت
+  if (usdPrice || goldPrice) {
+    const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
+    const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
+    
+    marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
+  } else {
+    marketBox.innerText = "💵 بازار: در حال به‌روزرسانی...";
   }
 }
 
