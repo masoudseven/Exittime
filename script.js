@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا مستقیماً از BRS API
+    // دریافت قیمت دلار و طلا مستقیماً از BRS API با عبور از CORS
     fetchMarketPrices();
 });
 
@@ -31,27 +31,32 @@ async function fetchMarketPrices() {
   let goldPrice = null;
 
   try {
-    // فراخوانی مستقیم API رسمی BRS
-    const response = await fetch('https://brsapi.ir/FreeTether/api/');
+    // استفاده از پروکسی برای حل مشکل CORS در مرورگر
+    const apiUrl = 'https://brsapi.ir/FreeTether/api/';
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);
+
+    const response = await fetch(proxyUrl);
     const data = await response.json();
 
     // ۱. استخراج قیمت دلار/تتر (تبدیل ریال به تومان)
-    if (data && data.currency && data.currency.length > 0) {
-      const usdItem = data.currency.find(item => item.symbol === 'USDT' || item.name_en === 'USDT' || item.name_fa === 'دلار');
-      if (usdItem && usdItem.price > 0) {
-        usdPrice = Math.round(usdItem.price / 10);
-      } else if (data.currency[0]?.price > 0) {
-        usdPrice = Math.round(data.currency[0].price / 10);
+    if (data && data.price_dollar && data.price_dollar.length > 0) {
+      const usdItem = data.price_dollar.find(item => item.symbol === 'USDT' || item.name === 'دلار');
+      const itemToUse = usdItem || data.price_dollar[0];
+      
+      if (itemToUse && itemToUse.price) {
+        const rawPrice = parseFloat(itemToUse.price.toString().replace(/,/g, ''));
+        if (rawPrice > 0) usdPrice = Math.round(rawPrice / 10);
       }
     }
 
     // ۲. استخراج قیمت طلای ۱۸ عیار (تبدیل ریال به تومان)
-    if (data && data.gold && data.gold.length > 0) {
-      const goldItem = data.gold.find(item => item.name_fa.includes('۱۸') || item.symbol === 'GOLD_18');
-      if (goldItem && goldItem.price > 0) {
-        goldPrice = Math.round(goldItem.price / 10);
-      } else if (data.gold[0]?.price > 0) {
-        goldPrice = Math.round(data.gold[0].price / 10);
+    if (data && data.price_gold && data.price_gold.length > 0) {
+      const goldItem = data.price_gold.find(item => item.name.includes('۱۸') || item.symbol === 'GOLD_18');
+      const itemToUse = goldItem || data.price_gold[0];
+
+      if (itemToUse && itemToUse.price) {
+        const rawPrice = parseFloat(itemToUse.price.toString().replace(/,/g, ''));
+        if (rawPrice > 0) goldPrice = Math.round(rawPrice / 10);
       }
     }
 
@@ -59,7 +64,7 @@ async function fetchMarketPrices() {
     console.warn("خطا در دریافت داده‌ها از BRS API:", error);
   }
 
-  // ۳. اگر به هر دلیلی شبکه قطع بود، استفاده از آخرین نرخ موفق ذخیره‌شده
+  // ۳. ذخیره در localStorage برای پشتیبانی از حالت آفلاین
   if (usdPrice) {
     localStorage.setItem('brs_usd_price', usdPrice);
   } else {
@@ -79,7 +84,7 @@ async function fetchMarketPrices() {
     
     marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
   } else {
-    marketBox.innerText = "💵 بازار: در حال دریافت قیمت...";
+    marketBox.innerText = "💵 بازار: خطای دریافت قیمت";
   }
 }
 
