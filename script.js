@@ -8,53 +8,59 @@ document.addEventListener("DOMContentLoaded", () => {
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
-    // آب و هوا
+    // آب و هوا (با بارگذاری سریع و بهینه‌شده)
     fetchWeather();
 
-    // قیمت دلار و طلا (فوری و بدون معطلی)
+    // قیمت دلار و طلا (به‌صورت جداگانه و به‌روز)
     fetchMarketPrices();
 });
 
 async function fetchWeather() {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 1500);
+
   try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`);
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=35.6892&longitude=51.3890&current_weather=true`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
       document.getElementById("weatherBox").innerText = `🌡️ تهران: ${Math.round(data.current_weather.temperature)}°C`;
     }
   } catch (e) {
-    document.getElementById("weatherBox").innerText = "☀️ تهران: ۲۲°C";
+    document.getElementById("weatherBox").innerText = "☀️ تهران: ۲۵°C";
   }
 }
 
-// دریافت قیمت سریع با مقادیر پیش‌فرض
+// دریافت قیمت با منابع به‌روز و تفکیک باکس‌ها
 function fetchMarketPrices() {
-  const marketBox = document.getElementById('marketBox');
-  if (!marketBox) return;
+  const usdBox = document.getElementById('usdBox');
+  const goldBox = document.getElementById('goldBox');
 
-  // ۱. مقادیر پیش‌فرض یا آخرین مقدار ذخیره‌شده (برای نمایش آنی بدون خط‌تیره)
-  let usdPrice = localStorage.getItem('exittime_usd') || "61,500";
-  let goldPrice = localStorage.getItem('exittime_gold') || "3,650,000";
+  // مقادیر پیش‌فرض به‌روز (برای نمایش آنی در لحظه اول)
+  let usdPrice = localStorage.getItem('exittime_usd') || "92,500";
+  let goldPrice = localStorage.getItem('exittime_gold') || "6,850,000";
 
-  // نمایش فوری در میلی‌ثانیه‌ی اول
   renderPrices(usdPrice, goldPrice);
 
-  // ۲. تلاش برای به‌روزرسانی آنلاین در پس‌زمینه (با تایم‌اوت ۲ ثانیه‌ای)
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 2000);
+  const timeoutId = setTimeout(() => controller.abort(), 2500);
 
-  fetch('https://gist.githubusercontent.com/polarspetroll/8cb87fab5b16e2e71326f2c52f8771fd/raw', { signal: controller.signal })
+  fetch('https://brsapi.ir/FreeTGL/currency_gold.json', { signal: controller.signal })
     .then(res => res.json())
     .then(data => {
       clearTimeout(timeoutId);
       let newUsd = null;
       let newGold = null;
 
-      if (data?.usd) newUsd = Number(data.usd).toLocaleString('fa-IR');
-      else if (data?.price_dollar?.[0]?.price) newUsd = Number(data.price_dollar[0].price).toLocaleString('fa-IR');
+      if (data?.currency) {
+        const usdData = data.currency.find(c => c.code === "USD" || c.name?.includes("دلار"));
+        if (usdData?.price) newUsd = Number(usdData.price).toLocaleString('fa-IR');
+      }
 
-      if (data?.gold) newGold = Number(data.gold).toLocaleString('fa-IR');
-      else if (data?.price_gold?.[0]?.price) newGold = Number(data.price_gold[0].price).toLocaleString('fa-IR');
+      if (data?.gold) {
+        const goldData = data.gold.find(g => g.code === "IR_GOLD_18" || g.name?.includes("۱۸"));
+        if (goldData?.price) newGold = Number(goldData.price).toLocaleString('fa-IR');
+      }
 
       if (newUsd || newGold) {
         if (newUsd) localStorage.setItem('exittime_usd', newUsd);
@@ -63,15 +69,16 @@ function fetchMarketPrices() {
       }
     })
     .catch(() => {
-      // اگر به هر دلیلی اینترنت قطع بود یا آنلاین نشد، همان مقادیر سریع نمایش داده شده باقی می‌مانند
+      // در صورت قطعی یا تایم‌اوت، همان مقادیر سریع باقی می‌مانند
     });
 }
 
 function renderPrices(usd, gold) {
-  const marketBox = document.getElementById('marketBox');
-  if (marketBox) {
-    marketBox.innerHTML = `💵 دلار: <b>${usd} تومان</b> | 🪙 طلا: <b>${gold} تومان</b>`;
-  }
+  const usdBox = document.getElementById('usdBox');
+  const goldBox = document.getElementById('goldBox');
+
+  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd}</b>`;
+  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold}</b>`;
 }
 
 // ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
