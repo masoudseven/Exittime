@@ -1,4 +1,4 @@
-// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و بازار دلار و طلا)
+// ۱. مدیریت ویجت‌های هدر (تقویم شمسی، تقویم میلادی، آب و هوا و نرخ دلار و طلا)
 document.addEventListener("DOMContentLoaded", async () => {
     // تقویم محلی شمسی
     const shamsiOptions = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا مستقیماً از BRS API با عبور از CORS
+    // دریافت نرخ دلار و طلا مستقیماً از BRS API با مکانیسم هوشمند
     fetchMarketPrices();
 });
 
-// تابع اختصاصی خواندن قیمت‌ها از BRS API (brsapi.ir)
+// تابع اختصاصی دریافت قیمت‌ها با سیستم فال‌بک (پشتیبان) چندلایه
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,16 +30,40 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  try {
-    // استفاده از پروکسی برای حل مشکل CORS در مرورگر
-    const apiUrl = 'https://brsapi.ir/FreeTether/api/';
-    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);
+  // لیست آدرس‌ها برای دور زدن محدودیت CORS و قطعی پروکسی‌ها
+  const targetUrl = 'https://brsapi.ir/FreeTether/api/';
+  const urlsToTry = [
+    targetUrl, // تلاش مستقیم اولیه
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`, // پروکسی اول
+    `https://corsproxy.io/?${encodeURIComponent(targetUrl)}` // پروکسی دوم
+  ];
 
-    const response = await fetch(proxyUrl);
-    const data = await response.json();
+  let data = null;
 
+  for (const url of urlsToTry) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000); // تایم‌اوت ۴ ثانیه‌ای
+
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        data = await response.json();
+        if (data && (data.price_dollar || data.price_gold)) {
+          break; // دریافت موفقیت‌آمیز داده‌ها
+        }
+      }
+    } catch (e) {
+      // در صورت خطا، رفتن به لینک پروکسی بعدی
+      continue;
+    }
+  }
+
+  // پردازش داده‌های دریافتی
+  if (data) {
     // ۱. استخراج قیمت دلار/تتر (تبدیل ریال به تومان)
-    if (data && data.price_dollar && data.price_dollar.length > 0) {
+    if (data.price_dollar && data.price_dollar.length > 0) {
       const usdItem = data.price_dollar.find(item => item.symbol === 'USDT' || item.name === 'دلار');
       const itemToUse = usdItem || data.price_dollar[0];
       
@@ -50,7 +74,7 @@ async function fetchMarketPrices() {
     }
 
     // ۲. استخراج قیمت طلای ۱۸ عیار (تبدیل ریال به تومان)
-    if (data && data.price_gold && data.price_gold.length > 0) {
+    if (data.price_gold && data.price_gold.length > 0) {
       const goldItem = data.price_gold.find(item => item.name.includes('۱۸') || item.symbol === 'GOLD_18');
       const itemToUse = goldItem || data.price_gold[0];
 
@@ -59,12 +83,9 @@ async function fetchMarketPrices() {
         if (rawPrice > 0) goldPrice = Math.round(rawPrice / 10);
       }
     }
-
-  } catch (error) {
-    console.warn("خطا در دریافت داده‌ها از BRS API:", error);
   }
 
-  // ۳. ذخیره در localStorage برای پشتیبانی از حالت آفلاین
+  // ۳. ذخیره‌سازی یا بازیابی از LocalStorage (جهت نمایش آفلاین)
   if (usdPrice) {
     localStorage.setItem('brs_usd_price', usdPrice);
   } else {
@@ -77,14 +98,14 @@ async function fetchMarketPrices() {
     goldPrice = localStorage.getItem('brs_gold_price');
   }
 
-  // ۴. نمایش نهایی قیمت‌ها در هدر
+  // ۴. نمایش نهایی (بدون کلمه "بازار")
   if (usdPrice || goldPrice) {
     const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
     const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
     
     marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
   } else {
-    marketBox.innerText = "💵 بازار: خطای دریافت قیمت";
+    marketBox.innerHTML = `💵 دلار: <b>---</b> | 🪙 طلا: <b>---</b>`;
   }
 }
 
