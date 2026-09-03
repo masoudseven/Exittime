@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const gregorianOptions = { weekday: 'long', month: 'long', day: 'numeric' };
     document.getElementById("gregorianTimeBox").innerText = "🌐 " + new Date().toLocaleDateString('en-US', gregorianOptions);
     
-    // آب و هوا (با بارگذاری سریع و بهینه‌شده)
+    // آب و هوا
     fetchWeather();
 
-    // قیمت دلار و طلا (به‌صورت جداگانه و به‌روز)
+    // قیمت دلار و طلا
     fetchMarketPrices();
 });
 
@@ -31,12 +31,7 @@ async function fetchWeather() {
   }
 }
 
-// دریافت قیمت با منابع به‌روز و تفکیک باکس‌ها
 function fetchMarketPrices() {
-  const usdBox = document.getElementById('usdBox');
-  const goldBox = document.getElementById('goldBox');
-
-  // مقادیر پیش‌فرض به‌روز (برای نمایش آنی در لحظه اول)
   let usdPrice = localStorage.getItem('exittime_usd') || "92,500";
   let goldPrice = localStorage.getItem('exittime_gold') || "6,850,000";
 
@@ -68,20 +63,18 @@ function fetchMarketPrices() {
         renderPrices(newUsd || usdPrice, newGold || goldPrice);
       }
     })
-    .catch(() => {
-      // در صورت قطعی یا تایم‌اوت، همان مقادیر سریع باقی می‌مانند
-    });
+    .catch(() => {});
 }
 
 function renderPrices(usd, gold) {
   const usdBox = document.getElementById('usdBox');
   const goldBox = document.getElementById('goldBox');
 
-  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd} <span class="unit-text">تومان</span></b>`;
-  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold} <span class="unit-text">تومان</span></b>`;
+  if (usdBox) usdBox.innerHTML = `💵 دلار: <b>${usd} تومان</b>`;
+  if (goldBox) goldBox.innerHTML = `🪙 طلا: <b>${gold} تومان</b>`;
 }
 
-// ۲. منطق محاسباتی اصلی به همراه تایمر هوشمند
+// ۲. محاسبات زمان خروج
 let abortController = null;
 let countdownInterval = null;
 
@@ -292,7 +285,7 @@ function setupLiveCountdown(exitH, exitM) {
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
-// ۳. بخش بازی مخفی دوز (۵ کلیک روی متن فوتر)
+// ۳. بازی دوز
 let clickCount = 0;
 function triggerEasterEgg() {
     clickCount++;
