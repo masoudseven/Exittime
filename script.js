@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("weatherBox").innerText = "☀️ تهران: --";
     }
 
-    // دریافت قیمت دلار و طلا
+    // دریافت قیمت دلار و طلا به‌صورت زنده و بدون کش
     fetchMarketPrices();
 });
 
-// تابع هوشمند دریافت قیمت دلار و طلا بدون مشکل CORS و با حافظه پشتیبان
+// تابع هوشمند دریافت قیمت لحظه‌ای دلار و طلای ۱۸ عیار بدون کش مرورگر
 async function fetchMarketPrices() {
   const marketBox = document.getElementById('marketBox');
   if (!marketBox) return;
@@ -30,45 +30,44 @@ async function fetchMarketPrices() {
   let usdPrice = null;
   let goldPrice = null;
 
-  // ۱. دریافت نرخ دلار/تتر زنده (با استفاده از پروکسی برای حل مشکل CORS مرورگر)
-  try {
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
-    const targetUrl = encodeURIComponent('https://api.nobitex.ir/v2/orderbook/USDTIRT');
-    
-    const response = await fetch(proxyUrl + targetUrl);
-    const data = await response.json();
-    
-    if (data && data.lastTradePrice) {
-      usdPrice = Math.round(data.lastTradePrice / 10); // تبدیل ریال به تومان
-    }
-  } catch (error) {
-    console.warn("خطا در دریافت دلار از نوبیتکس، تلاش از منبع دوم...");
-  }
+  // ایجاد یک کلید زمان برای دور زدن کش مرورگر (Cache Buster)
+  const timestamp = new Date().getTime();
 
-  // ۲. دریافت نرخ طلا و دلار از API عمومی BRS
+  // تلاش ۱: دریافت از BRS API با زمان لحظه‌ای
   try {
-    const response = await fetch('https://brsapi.ir/FreeTether/api/');
+    const response = await fetch(`https://brsapi.ir/FreeTether/api/?nocache=${timestamp}`);
     const data = await response.json();
 
     if (data && data.gold && data.gold[0]?.price > 0) {
-      goldPrice = Math.round(data.gold[0].price / 10);
+      goldPrice = Math.round(data.gold[0].price / 10); // تبدیل ریال به تومان
     }
-
-    // اگر دلار از نوبیتکس گرفته نشد، از این منبع بگیر
-    if (!usdPrice && data && data.currency && data.currency[0]?.price > 0) {
+    if (data && data.currency && data.currency[0]?.price > 0) {
       usdPrice = Math.round(data.currency[0].price / 10);
     }
   } catch (error) {
-    console.warn("خطا در دریافت نرخ BRS");
+    console.warn("خطا در منبع اول، تلاش برای دریافت از سرویس دوم...");
   }
 
-  // ۳. اگر طلا صفر یا غیرفعال بود، براساس قیمت دلار یک نرخ تخمینی طلای ۱۸ عیار محاسبه کن تا خالی نمونه
+  // تلاش ۲: اگر دلار دریافت نشد، دریافت نرخ زنده ۲۴ ساعته تتر/دلار از Nobitex
+  if (!usdPrice) {
+    try {
+      const response = await fetch(`https://api.nobitex.ir/v2/orderbook/USDTIRT?t=${timestamp}`);
+      const data = await response.json();
+      if (data && data.lastTradePrice) {
+        usdPrice = Math.round(parseInt(data.lastTradePrice) / 10);
+      }
+    } catch (error) {
+      console.warn("خطا در منبع دوم دلار.");
+    }
+  }
+
+  // تلاش ۳: اگر طلا هنوز دریافت نشده باشد، محاسبه بر اساس مظنه زنده دلار
   if (!goldPrice && usdPrice) {
-    // فرمول تقریبی محاسبه طلای ۱۸ عیار بر اساس دلار و انس جهانی (برای جلوگیری از خالی ماندن)
+    // فرمول برآورد تقریبی قیمت گرم طلای ۱۸ عیار بر اساس دلار روز
     goldPrice = Math.round((usdPrice * 2650 * 0.75) / 31.1035);
   }
 
-  // ۴. مدیریت حافظه مرورگر (LocalStorage) برای مواقعی که کلاً اینترنت قطعه
+  // ذخیره آخرین نرخ در حافظه مرورگر در صورت قطع شدن کامل شبکه
   if (usdPrice) {
     localStorage.setItem('last_usd_price', usdPrice);
   } else {
@@ -81,15 +80,14 @@ async function fetchMarketPrices() {
     goldPrice = localStorage.getItem('last_gold_price');
   }
 
-  // ۵. نمایش قطعی قیمت‌ها
+  // نمایش نهایی قیمت‌های بروزرسانی شده
   if (usdPrice || goldPrice) {
-    const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '۶۸,۵۰۰';
-    const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '۴,۵۵۰,۰۰۰';
+    const usdDisplay = usdPrice ? Number(usdPrice).toLocaleString('fa-IR') : '---';
+    const goldDisplay = goldPrice ? Number(goldPrice).toLocaleString('fa-IR') : '---';
     
     marketBox.innerHTML = `💵 دلار: <b>${usdDisplay}</b> | 🪙 طلا: <b>${goldDisplay} تومان</b>`;
   } else {
-    // قیمت هاردکد شده مینیما‌ل فقط برای اولین باری که سیستم هیچ داده‌ای نداره
-    marketBox.innerHTML = `💵 دلار: <b>۶۸,۵۰۰</b> | 🪙 طلا: <b>۴,۵۵۰,۰۰۰ تومان</b>`;
+    marketBox.innerText = "💵 بازار: در حال به‌روزرسانی...";
   }
 }
 
