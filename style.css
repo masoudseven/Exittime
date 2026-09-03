@@ -67,6 +67,14 @@ h2 {
 
 .header-box b {
     color: #2b6cb0;
+    font-weight: 700;
+}
+
+.header-box .unit-text {
+    font-size: 0.68rem;
+    color: #a0aec0;
+    font-weight: normal;
+    margin-right: 2px;
 }
 
 .input-group {
